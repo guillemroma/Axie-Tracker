@@ -10,10 +10,58 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_16_152150) do
+ActiveRecord::Schema.define(version: 2022_03_16_165412) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "axies", force: :cascade do |t|
+    t.string "name"
+    t.string "breed"
+    t.bigint "team_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["team_id"], name: "index_axies_on_team_id"
+  end
+
+  create_table "constructions", force: :cascade do |t|
+    t.bigint "axie_id", null: false
+    t.integer "health"
+    t.integer "speed"
+    t.integer "morale"
+    t.integer "skill"
+    t.string "back"
+    t.string "horn"
+    t.string "tail"
+    t.string "mouth"
+    t.string "ears"
+    t.string "eyes"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["axie_id"], name: "index_constructions_on_axie_id"
+  end
+
+  create_table "currencies", force: :cascade do |t|
+    t.string "name"
+    t.float "price"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "teams", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_teams_on_user_id"
+  end
+
+  create_table "tweets", force: :cascade do |t|
+    t.string "content"
+    t.integer "retweets"
+    t.integer "likes"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -27,4 +75,7 @@ ActiveRecord::Schema.define(version: 2022_03_16_152150) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "axies", "teams"
+  add_foreign_key "constructions", "axies", column: "axie_id"
+  add_foreign_key "teams", "users"
 end
