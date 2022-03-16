@@ -6,4 +6,6 @@ class User < ApplicationRecord
 
   has_many :teams, dependent: :destroy
 
+  validates :ronin_address, presence: true
+
 end
