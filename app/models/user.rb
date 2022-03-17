@@ -6,7 +6,7 @@ class User < ApplicationRecord
 
   has_many :teams, dependent: :destroy
   has_many :ronin_addresses, dependent: :destroy
-
-  validates :ronin_address, presence: true
+  has_many :axies, through: :teams, dependent: :destroy
+  has_many :favorites, dependent: :destroy
 
 end
