@@ -2,17 +2,17 @@ class RemoveReferenceFromConstruction < ActiveRecord::Migration[6.1]
   def change
     drop_table :constructions
 
-    add_column :axies, :hp, :integer
-    add_column :axies, :morale, :integer
-    add_column :axies, :speed, :integer
-    add_column :axies, :skill, :integer
-    add_column :axies, :eyes, :string
-    add_column :axies, :ears, :string
-    add_column :axies, :back, :string
-    add_column :axies, :mouth, :string
-    add_column :axies, :horn, :string
-    add_column :axies, :tail, :string
-    add_column :axies, :image, :string
+    add_column :pets, :hp, :integer
+    add_column :pets, :morale, :integer
+    add_column :pets, :speed, :integer
+    add_column :pets, :skill, :integer
+    add_column :pets, :eyes, :string
+    add_column :pets, :ears, :string
+    add_column :pets, :back, :string
+    add_column :pets, :mouth, :string
+    add_column :pets, :horn, :string
+    add_column :pets, :tail, :string
+    add_column :pets, :image, :string
 
 
     add_column :teams, :mmr, :integer
@@ -23,7 +23,7 @@ class RemoveReferenceFromConstruction < ActiveRecord::Migration[6.1]
     add_column :teams, :next_claim, :integer
 
 
-    remove_column :axies, :breed
+    remove_column :pets, :breed
 
   end
 end
