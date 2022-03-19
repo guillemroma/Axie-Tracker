@@ -7,13 +7,7 @@ class Team < ApplicationRecord
   has_many :battles, dependent: :destroy
   has_many :pets, dependent: :destroy, class_name:  "Pet"
 
-
-  validates :mmr, uniqueness: true
-  validates :rank, uniqueness: true
-  validates :current_slp, uniqueness: true
-  validates :total_slp, uniqueness: true
-  validates :last_claim, uniqueness: true
-  validates :next_claim, uniqueness: true
-  validates :ronin_address, uniqueness: true
+  validates :ronin_address, presence: true
+  validates :scholar_name, presence: true
 
 end

@@ -3,12 +3,97 @@
       <p>Hola!</p>
     </div>
     <div class="user-stats">
-      <%= @user.email %>
+      <div class="d-flex justify-content-between">
+        <div class="card-summary">
+          <span class="underline"><%= @user.teams.exists? ? number_with_delimiter(@current_slp, :delimiter => ',') : "- " %></span>
+          <p>SLP's</p>
+        </div>
+        <div class="card-summary">
+          <span class="underline"><%= @user.teams.exists? ? (@wins / @battles) : "- " %>%</span>
+          <p>Win Rate</p>
+        </div>
+        <div class="card-summary">
+          <span class="underline" ><%= @user.teams.exists? ? number_with_delimiter(@mmr.max, :delimiter => ',') : "- " %></span>
+          <p>Highest MMR</p>
+        </div>
+        <div class="card-summary">
+          <span class="underline"><%= @user.teams.exists? ? number_with_delimiter(@mmr.min, :delimiter => ',') : "- " %></span>
+          <p>Lowest MMR</p>
+        </div>
+      </div>
+      <div class="mt-5">
+        <%= simple_form_for @team, url: "/ronin_address", :method => :patch, html: { class: "d-flex justify-content-center mt-2"}, defaults: { wrapper: false } do |f| %>
+          <div class="">
+            <div class="d-flex form-input h-100">
+              <%= f.input :scholar_name, label: false, input_html: { class: "visible-input"}, placeholder: 'Scholar name' %>
+              <%= f.input :ronin_address, label: false, input_html: { class: "visible-input"}, placeholder: 'Ronin address' %>
+              <%= f.input :user_id, :as => :hidden, :input_html => { :value => @user.id } %>
+            </div>
+          </div>
+          <%= f.submit "Track address", class: "btn-submit" %>
+        <% end %>
+      </div>
+      <div class="mt-5">
+        <div class = "row-headers">
+          <div class= "d-flex w-100">
+            <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
+              <strong>Scholar name</strong>
+            </div>
+            <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
+              <strong>Win rate</strong>
+            </div>
+            <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
+              <strong>MMR</strong>
+            </div>
+            <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
+              <strong>Rank</strong>
+            </div>
+            <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
+              <strong>Current_SLP</strong>
+            </div>
+            <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
+              <strong>Total_SLP</strong>
+            </div>
+            <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
+              <strong>Next_claim</strong>
+            </div>
+            <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
+              <strong>Last_claim</strong>
+            </div>
+          </div>
+        </div>
+        <% @user.teams.each do |team| %>
+          <div class = "row">
+            <div class= "d-flex w-100">
+              <div class="table-input d-flex align-items-center justify-content-center m-0">
+                <%= team.scholar_name %>
+              </div>
+              <div class="table-input d-flex align-items-center justify-content-center m-0">
+                <%= team.win_rate %>%
+              </div>
+              <div class="table-input d-flex align-items-center justify-content-center m-0">
 
-      <%= simple_form_for @team, url: "/ronin_address", :method => :patch  do |f| %>
-        <%= f.input :ronin_address %>
-        <%= f.input :user_id, :as => :hidden, :input_html => { :value => @user.id } %>
-        <%= f.submit "Add Ronin Address", class: "btn btn-primary" %>
-      <% end %>
+              </div>
+              <div class="table-input d-flex align-items-center justify-content-center m-0">
+                Rank
+              </div>
+              <div class="table-input d-flex align-items-center justify-content-center m-0">
+                Current_SLP
+              </div>
+              <div class="table-input d-flex align-items-center justify-content-center m-0">
+                Total_SLP
+              </div>
+              <div class="table-input d-flex align-items-center justify-content-center m-0">
+                Next_claim
+              </div>
+              <div class="table-input d-flex align-items-center justify-content-center m-0">
+                Last_claim
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
     </div>
+
+
 </div>

@@ -16,14 +16,38 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @team = Team.new
 
+    @mmr = []
+    @current_slp = 0
+    @wins = 0
+    @battles = 0
+
+    @user.teams.each do |team|
+      @current_slp += team.current_slp if !team.current_slp.nil?
+      @mmr << team.mmr
+      team.battles.each do |battle|
+        battle.result == "won" ? (@wins +=1 && @battles += 1) : (@battles += 1)
+      end
+    end
+
+
+
   end
 
   def update
 
-    @user = User.find(current_user.id)
+    @user = User.find(params["team"]["user_id"].to_i)
     @address = params["team"]["ronin_address"].gsub!("ronin:", "0x")
-    #@ronin_address = RoninAddress.create(address: @address, user_id: current_user.id)
-    @user_team = Team.where('ronin_address' => @address).exists? ? @user.teams.first : Team.create(user_id: current_user.id, ronin_address: @address)
+    @user_team = Team.where('ronin_address' => @address).exists? ? @user.teams.first : Team.create(
+      user_id: current_user.id,
+      ronin_address: @address,
+      mmr: add_metrics(@address)["mmr"],
+      rank: add_metrics(@address)["rank"],
+      current_slp: add_metrics(@address)["total_slp"],
+      total_slp: add_metrics(@address)["raw_total"],
+      last_claim: add_metrics(@address)["last_claim"],
+      next_claim: add_metrics(@address)["next_claim"],
+      scholar_name: params["team"]["scholar_name"]
+      )
 
     add_axies(@address)["data"]["axies"]["results"].each do |axie|
 
@@ -47,6 +71,9 @@ class UsersController < ApplicationController
     @user.teams.first.total_slp = @team_metrics["raw_total"]
     @user.teams.first.last_claim = @team_metrics["last_claim"]
     @user.teams.first.next_claim = @team_metrics["next_claim"]
+    #check_win_rate(@user.teams.first)
+    #@user.teams.first.win_rate = @win_rate
+    raise
     @user.teams.first.save
 
     redirect_to "/users/#{current_user.id}"
@@ -115,6 +142,17 @@ class UsersController < ApplicationController
     response = http.request(request)
     json_response = JSON.parse(response.body)
 
+  end
+
+  def check_win_rate(team)
+    wins = 0
+    battles = 0
+
+    team.battles.each do |battle|
+      battle.result == "won" ? (wins +=1 && battles += 1) : (battles += 1)
+    end
+    @win_rate = wins / battles
+    return @win_rate
   end
 
 end
