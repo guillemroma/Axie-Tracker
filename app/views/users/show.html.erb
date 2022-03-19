@@ -1,7 +1,14 @@
-<%= @user.email %>
+<div class="user-show d-flex justify-content-between">
+    <div class="general-stats">
+      <p>Hola!</p>
+    </div>
+    <div class="user-stats">
+      <%= @user.email %>
 
-<%= simple_form_for @address, url: "/ronin_address", :method => :patch  do |f| %>
-  <%= f.input :address %>
-  <%= f.input :user_id, :as => :hidden, :input_html => { :value => @user.id } %>
-  <%= f.submit "Add Ronin Address", class: "btn btn-primary" %>
-<% end %>
+      <%= simple_form_for @team, url: "/ronin_address", :method => :patch  do |f| %>
+        <%= f.input :ronin_address %>
+        <%= f.input :user_id, :as => :hidden, :input_html => { :value => @user.id } %>
+        <%= f.submit "Add Ronin Address", class: "btn btn-primary" %>
+      <% end %>
+    </div>
+</div>

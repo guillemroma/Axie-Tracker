@@ -14,5 +14,6 @@ class Team < ApplicationRecord
   validates :total_slp, uniqueness: true
   validates :last_claim, uniqueness: true
   validates :next_claim, uniqueness: true
+  validates :ronin_address, uniqueness: true
 
 end

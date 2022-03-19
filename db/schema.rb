@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_18_231634) do
+ActiveRecord::Schema.define(version: 2022_03_19_151058) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 2022_03_18_231634) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "team_id"
+    t.string "battle_uuid"
     t.index ["team_id"], name: "index_battles_on_team_id"
   end
 
@@ -60,14 +61,6 @@ ActiveRecord::Schema.define(version: 2022_03_18_231634) do
     t.index ["team_id"], name: "index_pets_on_team_id"
   end
 
-  create_table "ronin_addresses", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.string "address"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_ronin_addresses_on_user_id"
-  end
-
   create_table "teams", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -78,6 +71,7 @@ ActiveRecord::Schema.define(version: 2022_03_18_231634) do
     t.integer "total_slp"
     t.integer "last_claim"
     t.integer "next_claim"
+    t.string "ronin_address"
     t.index ["user_id"], name: "index_teams_on_user_id"
   end
 
@@ -97,6 +91,7 @@ ActiveRecord::Schema.define(version: 2022_03_18_231634) do
     t.datetime "remember_created_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "photo"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -104,6 +99,5 @@ ActiveRecord::Schema.define(version: 2022_03_18_231634) do
   add_foreign_key "favorites", "teams"
   add_foreign_key "favorites", "users"
   add_foreign_key "pets", "teams"
-  add_foreign_key "ronin_addresses", "users"
   add_foreign_key "teams", "users"
 end

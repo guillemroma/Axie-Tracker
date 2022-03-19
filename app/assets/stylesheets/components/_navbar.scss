@@ -1,12 +1,31 @@
-.navbar-lewagon {
+.navbar-axie {
   justify-content: space-between;
-  background: white;
+  background: #A3EBB1;
+  text-decoration: none;
+  text-shadow: 0ch;
 }
 
-.navbar-lewagon .navbar-collapse {
+.navbar-axie .navbar-collapse {
   flex-grow: 0;
 }
 
-.navbar-lewagon .navbar-brand img {
+.navbar-axie .navbar-brand img {
   width: 40px;
+}
+
+.nav-show {
+
+  @media (max-width: 20000px) {
+    /* line 20, node_modules/bootstrap/scss/_containers.scss */
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    max-width: 100vw;
+    width: 95vw;
+  }
+}
+
+.nav-link, a {
+  border-radius: 50%;
 }
