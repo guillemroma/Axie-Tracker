@@ -1,8 +1,8 @@
 class ChangeColumnToAxie < ActiveRecord::Migration[6.1]
   def change
 
-    remove_column :axies, :body_parts
-    add_reference :axies, :body_parts, index: true
+    remove_column :pets, :body_parts
+    add_reference :pets, :body_parts, index: true
 
   end
 end

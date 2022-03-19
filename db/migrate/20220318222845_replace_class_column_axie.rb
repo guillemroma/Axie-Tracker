@@ -1,8 +1,8 @@
 class ReplaceClassColumnAxie < ActiveRecord::Migration[6.1]
   def change
 
-    remove_column :axies, :class
-    add_column :axies, :axie_class, :string
+    remove_column :pets, :class
+    add_column :pets, :axie_class, :string
 
   end
 end

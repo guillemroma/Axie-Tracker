@@ -10,29 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_18_235748) do
+ActiveRecord::Schema.define(version: 2022_03_18_231634) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "axies", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.integer "hp"
-    t.integer "morale"
-    t.integer "speed"
-    t.integer "skill"
-    t.string "eyes"
-    t.string "ears"
-    t.string "back"
-    t.string "mouth"
-    t.string "horn"
-    t.string "tail"
-    t.string "image"
-    t.string "axie_class"
-    t.integer "axie_game_id"
-  end
 
   create_table "battles", force: :cascade do |t|
     t.string "result"
@@ -58,6 +39,27 @@ ActiveRecord::Schema.define(version: 2022_03_18_235748) do
     t.index ["user_id"], name: "index_favorites_on_user_id"
   end
 
+  create_table "pets", force: :cascade do |t|
+    t.string "name"
+    t.bigint "team_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "hp"
+    t.integer "morale"
+    t.integer "speed"
+    t.integer "skill"
+    t.string "eyes"
+    t.string "ears"
+    t.string "back"
+    t.string "mouth"
+    t.string "horn"
+    t.string "tail"
+    t.string "image"
+    t.string "axie_class"
+    t.integer "axie_game_id"
+    t.index ["team_id"], name: "index_pets_on_team_id"
+  end
+
   create_table "ronin_addresses", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "address"
@@ -67,6 +69,7 @@ ActiveRecord::Schema.define(version: 2022_03_18_235748) do
   end
 
   create_table "teams", force: :cascade do |t|
+    t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "mmr"
@@ -75,6 +78,7 @@ ActiveRecord::Schema.define(version: 2022_03_18_235748) do
     t.integer "total_slp"
     t.integer "last_claim"
     t.integer "next_claim"
+    t.index ["user_id"], name: "index_teams_on_user_id"
   end
 
   create_table "tweets", force: :cascade do |t|
@@ -99,5 +103,7 @@ ActiveRecord::Schema.define(version: 2022_03_18_235748) do
 
   add_foreign_key "favorites", "teams"
   add_foreign_key "favorites", "users"
+  add_foreign_key "pets", "teams"
   add_foreign_key "ronin_addresses", "users"
+  add_foreign_key "teams", "users"
 end

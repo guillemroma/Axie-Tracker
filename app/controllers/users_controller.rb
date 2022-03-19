@@ -19,16 +19,16 @@ class UsersController < ApplicationController
   end
 
   def update
-    raise
+
     @user = User.find(current_user.id)
     @address = params["ronin_address"]["address"].gsub!("ronin:", "0x")
     @ronin_address = RoninAddress.create(address: @address, user_id: current_user.id)
-    @user_team = Team.where('user_id' => current_user.id).exists? ? @user.team.id : Team.create(user_id: current_user.id)
+    @user_team = Team.where('user_id' => current_user.id).exists? ? @user.team : Team.create(user_id: current_user.id)
 
     add_axies(@ronin_address)["data"]["axies"]["results"].each do |axie|
 
       @axie_genes = add_genes_to_axie(axie["id"].to_i)
-      Axie.create(team_id: @user.team.id, image: axie["image"], axie_game_id: @axie_genes["story_id"],name: @axie_genes["name"], hp: @axie_genes["stats"]["hp"], morale: @axie_genes["stats"]["morale"], speed: @axie_genes["stats"]["speed"], skill: @axie_genes["stats"]["skill"], axie_class:  @axie_genes["class"], eyes: @axie_genes["parts"][0]["name"], ears: @axie_genes["parts"][1]["name"], back: @axie_genes["parts"][2]["name"], mouth: @axie_genes["parts"][3]["name"], horn: @axie_genes["parts"][4]["name"], tail: @axie_genes["parts"][5]["name"])
+      Pet.create(team_id: @user.team.id, image: axie["image"], axie_game_id: @axie_genes["story_id"],name: @axie_genes["name"], hp: @axie_genes["stats"]["hp"], morale: @axie_genes["stats"]["morale"], speed: @axie_genes["stats"]["speed"], skill: @axie_genes["stats"]["skill"], axie_class:  @axie_genes["class"], eyes: @axie_genes["parts"][0]["name"], ears: @axie_genes["parts"][1]["name"], back: @axie_genes["parts"][2]["name"], mouth: @axie_genes["parts"][3]["name"], horn: @axie_genes["parts"][4]["name"], tail: @axie_genes["parts"][5]["name"])
 
     end
 

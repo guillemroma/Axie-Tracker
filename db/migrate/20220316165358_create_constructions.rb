@@ -1,7 +1,7 @@
 class CreateConstructions < ActiveRecord::Migration[6.1]
   def change
     create_table :constructions do |t|
-      t.references :axie, null: false, foreign_key: true
+      t.references :pet, null: false, foreign_key: true
       t.integer :health
       t.integer :speed
       t.integer :morale
