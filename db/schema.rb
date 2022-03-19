@@ -10,35 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_17_091457) do
+ActiveRecord::Schema.define(version: 2022_03_18_235748) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "axies", force: :cascade do |t|
     t.string "name"
-    t.string "breed"
-    t.bigint "team_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["team_id"], name: "index_axies_on_team_id"
-  end
-
-  create_table "constructions", force: :cascade do |t|
-    t.bigint "axie_id", null: false
-    t.integer "health"
-    t.integer "speed"
+    t.integer "hp"
     t.integer "morale"
+    t.integer "speed"
     t.integer "skill"
+    t.string "eyes"
+    t.string "ears"
     t.string "back"
+    t.string "mouth"
     t.string "horn"
     t.string "tail"
-    t.string "mouth"
-    t.string "ears"
-    t.string "eyes"
+    t.string "image"
+    t.string "axie_class"
+    t.integer "axie_game_id"
+  end
+
+  create_table "battles", force: :cascade do |t|
+    t.string "result"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["axie_id"], name: "index_constructions_on_axie_id"
+    t.bigint "team_id"
+    t.index ["team_id"], name: "index_battles_on_team_id"
   end
 
   create_table "currencies", force: :cascade do |t|
@@ -66,10 +67,14 @@ ActiveRecord::Schema.define(version: 2022_03_17_091457) do
   end
 
   create_table "teams", force: :cascade do |t|
-    t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_teams_on_user_id"
+    t.integer "mmr"
+    t.integer "rank"
+    t.integer "current_slp"
+    t.integer "total_slp"
+    t.integer "last_claim"
+    t.integer "next_claim"
   end
 
   create_table "tweets", force: :cascade do |t|
@@ -92,10 +97,7 @@ ActiveRecord::Schema.define(version: 2022_03_17_091457) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "axies", "teams"
-  add_foreign_key "constructions", "axies", column: "axie_id"
   add_foreign_key "favorites", "teams"
   add_foreign_key "favorites", "users"
   add_foreign_key "ronin_addresses", "users"
-  add_foreign_key "teams", "users"
 end
