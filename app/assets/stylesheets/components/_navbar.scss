@@ -1,8 +1,10 @@
 .navbar-axie {
   justify-content: space-between;
-  background: #A3EBB1;
-  text-decoration: none;
-  text-shadow: 0ch;
+  background: #f4f4f4fa;
+  position: sticky;
+  top: 0px;
+  padding-inline: 45px;
+  z-index: 999;
 }
 
 .navbar-axie .navbar-collapse {
@@ -26,6 +28,12 @@
   }
 }
 
-.nav-link, a {
-  border-radius: 50%;
+.nav-link {
+    margin-left: 20px;
+}
+
+.underline {
+    text-decoration: underline;
+    -webkit-text-decoration-color: #21B6A8;
+    text-decoration-color: #21B6A8;
 }
