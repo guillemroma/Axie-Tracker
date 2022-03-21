@@ -33,6 +33,7 @@ gem 'oauth'
 gem 'typhoeus'
 gem 'twurl'
 gem 'twitter'
+gem 'coingecko_ruby'
 
 gem 'autoprefixer-rails', '10.2.5'
 gem 'font-awesome-sass'

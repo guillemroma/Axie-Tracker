@@ -1,6 +1,10 @@
 class UsersController < ApplicationController
-  skip_before_action :authenticate_user!
+  skip_before_action :authenticate_user!, :raise => false
   require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/add_axie.rb'
+  require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/exchange.rb'
+  require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/coin.rb'
+  require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/info.rb'
+
 
   def index
 
@@ -26,6 +30,9 @@ class UsersController < ApplicationController
       end
     end
 
+    fetch_coins
+    @articles = Info.present
+    @article_count = 0
   end
 
   def update
@@ -79,6 +86,10 @@ class UsersController < ApplicationController
 
     end
 
+    fetch_coins
+    Info.present
+    @article_count = 0
+
     redirect_to "/users/#{@user.id}"
 
   end
@@ -90,15 +101,23 @@ class UsersController < ApplicationController
   end
 
   def update_team (user_team, team_metrics)
-      user_team.scholar_name = params["team"]["scholar_name"]
-      user_team.mmr = team_metrics["mmr"]
-      user_team.rank = team_metrics["rank"]
-      user_team.current_slp = team_metrics["total_slp"]
-      user_team.total_slp = team_metrics["raw_total"]
-      user_team.last_claim = team_metrics["last_claim"]
-      user_team.next_claim = team_metrics["next_claim"]
-      user_team.win_rate = AXIEAPI.check_win_rate(user_team)
-      user_team.save
+    user_team.scholar_name = params["team"]["scholar_name"]
+    user_team.mmr = team_metrics["mmr"]
+    user_team.rank = team_metrics["rank"]
+    user_team.current_slp = team_metrics["total_slp"]
+    user_team.total_slp = team_metrics["raw_total"]
+    user_team.last_claim = team_metrics["last_claim"]
+    user_team.next_claim = team_metrics["next_claim"]
+    user_team.win_rate = AXIEAPI.check_win_rate(user_team)
+    user_team.save
   end
 
+  def fetch_coins
+    @btc_usd = Coin.add_btc
+    @eth_usd = Coin.add_eth
+    @axs_usd = Coin.add_axs
+    @slp_usd = Coin.add_slp
+    @ron_usd = Coin.add_ron
+    @usd_to_eur_er = Exchange.add('USD','EUR')
+  end
 end
