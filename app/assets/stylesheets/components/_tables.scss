@@ -1,13 +1,14 @@
 .row {
-  height: 15vh;
+  height: 10vh;
   margin-bottom: 1vh;
-  background-color: green;
   border-style: solid;
-  border-color: black;
+  border-color: #21B6A8;
+  border-radius: 150px;
+  border-width: 0.05ch;
 }
 
 .table-input {
-  width: 12.5%;
+  width: 14.28%;
 }
 
 .row-headers {
@@ -17,7 +18,7 @@
 }
 
 .table-input-2 {
-  width: 12.5%;
+  width: 14.28%;
   border-style: solid;
   border-color: #21B6A8;
   border-top: none;
