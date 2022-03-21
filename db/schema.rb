@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_19_210744) do
+ActiveRecord::Schema.define(version: 2022_03_21_085504) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -73,7 +73,7 @@ ActiveRecord::Schema.define(version: 2022_03_19_210744) do
     t.integer "next_claim"
     t.string "ronin_address"
     t.string "scholar_name"
-    t.integer "win_rate"
+    t.float "win_rate"
     t.index ["user_id"], name: "index_teams_on_user_id"
   end
 

@@ -6,10 +6,10 @@
       <div class="d-flex justify-content-between">
         <div class="card-summary">
           <span class="underline"><%= @user.teams.exists? ? number_with_delimiter(@current_slp, :delimiter => ',') : "- " %></span>
-          <p>SLP's</p>
+          <p>Claimable SLP's</p>
         </div>
         <div class="card-summary">
-          <span class="underline"><%= @user.teams.exists? ? (@wins / @battles) : "- " %>%</span>
+          <span class="underline"><%= @user.teams.exists? ? ((@wins.to_f / @battles.to_f) * 100).to_i : "- " %>%</span>
           <p>Win Rate</p>
         </div>
         <div class="card-summary">
@@ -22,6 +22,7 @@
         </div>
       </div>
       <div class="mt-5">
+      <% if (current_user.present?) && (current_user.id == params[:id].to_i) %>
         <%= simple_form_for @team, url: "/ronin_address", :method => :patch, html: { class: "d-flex justify-content-center mt-2"}, defaults: { wrapper: false } do |f| %>
           <div class="">
             <div class="d-flex form-input h-100">
@@ -32,6 +33,7 @@
           </div>
           <%= f.submit "Track address", class: "btn-submit" %>
         <% end %>
+      <% end %>
       </div>
       <div class="mt-5">
         <div class = "row-headers">
@@ -49,16 +51,13 @@
               <strong>Rank</strong>
             </div>
             <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
-              <strong>Current_SLP</strong>
+              <strong>Claimable SLPs</strong>
             </div>
             <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
-              <strong>Total_SLP</strong>
+              <strong>Total SLP</strong>
             </div>
             <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
-              <strong>Next_claim</strong>
-            </div>
-            <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
-              <strong>Last_claim</strong>
+              <strong>Next claim</strong>
             </div>
           </div>
         </div>
@@ -66,28 +65,25 @@
           <div class = "row">
             <div class= "d-flex w-100">
               <div class="table-input d-flex align-items-center justify-content-center m-0">
-                <%= team.scholar_name %>
+                <strong><%= team.scholar_name.present? ? team.scholar_name : "" %></strong>
               </div>
               <div class="table-input d-flex align-items-center justify-content-center m-0">
-                <%= team.win_rate %>%
+                <%= team.win_rate.present? ? (team.win_rate * 100).to_i : "" %>%
               </div>
               <div class="table-input d-flex align-items-center justify-content-center m-0">
-
+                <%= team.mmr.present? ? number_with_delimiter(team.mmr, :delimiter => ',') : "" %>
               </div>
               <div class="table-input d-flex align-items-center justify-content-center m-0">
-                Rank
+                <%= team.rank.present? ? number_with_delimiter(team.rank, :delimiter => ',') : "" %>
               </div>
               <div class="table-input d-flex align-items-center justify-content-center m-0">
-                Current_SLP
+                <%= team.current_slp.present? ? number_with_delimiter(team.current_slp, :delimiter => ',') : "" %>
               </div>
               <div class="table-input d-flex align-items-center justify-content-center m-0">
-                Total_SLP
+                <%= team.total_slp.present? ? number_with_delimiter(team.total_slp, :delimiter => ',') : "" %>
               </div>
               <div class="table-input d-flex align-items-center justify-content-center m-0">
-                Next_claim
-              </div>
-              <div class="table-input d-flex align-items-center justify-content-center m-0">
-                Last_claim
+                <%= "In " %><%= team.next_claim.present? ? ((Time.at(team.next_claim) - Time.now)/60/60/24).to_i : "" %><%= ((Time.at(team.next_claim) - Time.now)/60/60/24).to_i == 1 ? " day" : " days" %>
               </div>
             </div>
           </div>
