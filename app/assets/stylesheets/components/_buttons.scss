@@ -19,3 +19,20 @@
     padding-left: 15px;
     transform: scale(1.01);
 }
+
+
+.submit input {
+  color: #fff;
+  background-color: #21B6A8;
+  border: none;
+  border-radius: 150px;
+  transition: transform 0.1s;
+  height: 75% !important;
+  margin-left: 2%;
+  padding-right: 15px;
+  padding-left: 15px;
+ }
+
+.submit:hover input {
+  transform: scale(1.01);
+}

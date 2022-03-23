@@ -1,11 +1,11 @@
 .row {
-  height: 10vh;
-  margin-bottom: 1vh;
+  height: 7%;
+  margin-bottom: 2px;
   border-style: solid;
   border-color: #21B6A8;
-  border-radius: 150px;
+  border-radius: 5px;
   border-width: 0.05ch;
-  background-color: #ececec;
+  background-color: rgb(255, 248, 248);
 }
 
 .table-input {
@@ -13,8 +13,8 @@
 }
 
 .row-headers {
-  height: 5vh;
-  margin-bottom: 2vh;
+  height: 8%;
+  margin-bottom: 1.5%;
 
 }
 
@@ -25,4 +25,23 @@
   border-top: none;
   border-right: none;
   border-left: none;
+}
+
+.scholars-breakdown {
+  li {
+    position: relative;
+    left: -20px;
+}
+}
+
+.edit-address img{
+  height: 25px;
+  width: 25px;
+  margin-right: 10px;
+}
+
+.table-of-contents {
+  ul {
+    padding-left: 2.5rem !important;
+  }
 }

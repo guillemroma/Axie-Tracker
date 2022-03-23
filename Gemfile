@@ -34,6 +34,7 @@ gem 'typhoeus'
 gem 'twurl'
 gem 'twitter'
 gem 'coingecko_ruby'
+gem 'turbolinks_render'
 
 gem 'autoprefixer-rails', '10.2.5'
 gem 'font-awesome-sass'

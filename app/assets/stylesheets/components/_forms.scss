@@ -16,3 +16,21 @@
     border-radius: 150px;
 
 }
+
+.form-input {
+  input.visible-input-update {
+    width: 100%;
+    margin-right: 0.5%;
+    justify-content: center;
+    height: 75%;
+    border-radius: 150px;
+  }
+}
+
+.form-input {
+  input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: #CED4DA;
+  }
+}
