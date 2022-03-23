@@ -10,4 +10,6 @@ class Team < ApplicationRecord
   validates :ronin_address, presence: true
   validates :scholar_name, presence: true
 
+  validates :ronin_address, uniqueness: true
+
 end

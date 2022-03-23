@@ -6,6 +6,11 @@ Rails.application.routes.draw do
   get "/users", to: "users#index"
   get "/users/:id", to: "users#show"
 
-  patch "/ronin_address", to: "users#update", as: :ronin_add
+  post "/ronin_address", to: "teams#create", as: :ronin_add
+
+  patch "/ronin_address/:id", to: "teams#update", as: :scholar_name_update
+  delete "/ronin_address/:id", to: "teams#destroy", as: :destroy_account
+
+
 
 end
