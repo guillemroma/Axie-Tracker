@@ -28,6 +28,11 @@
 }
 
 .scholars-breakdown {
+
+  @media (max-width: 600px) {
+    overflow: scroll;
+  }
+
   li {
     position: relative;
     left: -20px;
@@ -44,4 +49,72 @@
   ul {
     padding-left: 2.5rem !important;
   }
+}
+
+.ranking-table {
+  width: 100%;
+  .ranking-content {
+    width: 60%;
+  }
+}
+
+.table-input-ranking-1-header {
+  width: 33.33%;
+  border-style: solid;
+  border-color: #21B6A8;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+}
+
+.table-input-ranking-2-header {
+  width: 33.33%;
+  border-style: solid;
+  border-color: #21B6A8;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+}
+
+.ranking-row-headers {
+  margin-bottom: 1.5%;
+
+}
+
+.table-input-ranking-1 {
+  width: 33.33%;
+
+}
+
+.table-input-ranking-2 {
+  width: 33.33%;
+
+}
+
+.pagination {
+  a {
+    text-decoration: none;
+    color: #49423F;
+  }
+  em {
+    text-decoration: none;
+    color: #49423F;
+    font-weight: bold;
+    font-style: normal;
+
+  }
+}
+
+.pagination {
+  margin-left: 50px;
+}
+
+.stuck {
+  position: fixed;
+  width: 75%;
+}
+
+.stuck-prices {
+  position: fixed;
+  width: 100%;
 }
