@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_22_095247) do
+ActiveRecord::Schema.define(version: 2022_03_23_092101) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,14 @@ ActiveRecord::Schema.define(version: 2022_03_22_095247) do
     t.string "axie_class"
     t.integer "axie_game_id"
     t.index ["team_id"], name: "index_pets_on_team_id"
+  end
+
+  create_table "rankings", force: :cascade do |t|
+    t.integer "rank"
+    t.string "scholar_name"
+    t.integer "mmr"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "teams", force: :cascade do |t|

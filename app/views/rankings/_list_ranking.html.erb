@@ -1,0 +1,17 @@
+<div data-search-players-target="ranking">
+  <% @ranking.each do |team| %>
+    <div class= "d-flex justify-content-center">
+      <div class="table-input-ranking-1 d-flex align-items-center justify-content-center m-1">
+        <div>
+          <strong><%= "# " %><%= number_with_delimiter(team[:rank], :delimiter => ',') %></strong>
+        </div>
+      </div>
+      <div class="table-input-ranking-2 d-flex align-items-center justify-content-center m-0">
+        <%= team[:scholar_name] == "" ? "-" : team[:scholar_name] %>
+      </div>
+      <div class="table-input-ranking-2 d-flex align-items-center justify-content-center m-0">
+        <%= number_with_delimiter(team[:mmr], :delimiter => ',') %>
+      </div>
+    </div>
+  <% end %>
+</div>

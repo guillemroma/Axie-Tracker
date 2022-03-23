@@ -66,7 +66,7 @@ class TeamsController < ApplicationController
 
     respond_to do |format|
       format.html # Follow regular flow of Rails
-      format.text { render partial: "users/list_teams", locals: { team: @team }, formats: [:html] }
+      format.text { render partial: "teams/list_teams", locals: { team: @team }, formats: [:html] }
     end
 
   end

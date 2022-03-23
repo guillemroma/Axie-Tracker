@@ -1,41 +1,42 @@
 <div class="user-show d-flex justify-content-between">
     <div class="general-stats">
       <div class="card-show-left" >
-        <div class="card-show-left-title d-flex justify-content-center">
-          <h4 class="mt-1 mb-1">Prices</h4>
-        </div>
-        <div class="card-show-left-content-first mt-3">
-          <a href="https://www.coingecko.com/en/coins/bitcoin">
-            <div class="d-flex mb-1">
-              <span class="card-show-left-content-first-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/BTC_Logo.svg/2000px-BTC_Logo.svg.png" alt="Bitcoin logo"></span>
-              <span><strong>BTC</strong> price $<%= number_with_delimiter(@btc_usd.to_i, :delimiter => ',') %></span><br>
-            </div>
-          </a>
-          <a href="https://www.coingecko.com/en/coins/ethereum">
-            <div class="d-flex mb-1">
-            <span class="card-show-left-content-first-logo"><img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png" alt="Ethereum logo"></span>
-              <span><strong>ETH</strong> price $<%= number_with_delimiter(@eth_usd.to_i, :delimiter => ',') %></span><br>
-            </div>
-          </a>
-          <a href="https://www.coingecko.com/en/coins/axie-infinity">
-            <div class="d-flex mb-1">
-              <span class="card-show-left-content-first-logo"><img src="https://seeklogo.com/images/A/axie-infinity-axs-logo-57FE26A5DC-seeklogo.com.png" alt="Axs logo"></span>
-              <span><strong>AXS</strong> price $<%= number_with_delimiter(@axs_usd.to_i, :delimiter => ',') %></span><br>
-            </div>
-          </a>
-          <a href="https://www.coingecko.com/en/coins/smooth-love-potion">
-            <div class="d-flex mb-1">
-              <span class="card-show-left-content-first-logo"><img src="https://cryptologos.cc/logos/smooth-love-potion-slp-logo.png" alt="SLP logo"></span>
-              <span><strong>SLP</strong> price $<%= number_with_delimiter(@slp_usd.round(3), :delimiter => ',') %></span><br>
-            </div>
-          </a>
-          <a href="https://www.coingecko.com/en/coins/ronin">
-            <div class="d-flex">
-              <span class="card-show-left-content-first-logo"><img src="https://s2.coinmarketcap.com/static/img/coins/64x64/14101.png" alt="Ronin logo"></span>
-              <span><strong>RON</strong> price $<%= number_with_delimiter(@ron_usd.round(2), :delimiter => ',') %></span>
-            </div>
-          </a>
-        </div>
+
+          <div class="card-show-left-title d-flex justify-content-center">
+            <h4 class="mt-1 mb-1">Prices</h4>
+          </div>
+          <div class="card-show-left-content-first mt-3">
+            <a href="https://www.coingecko.com/en/coins/bitcoin">
+              <div class="d-flex mb-1">
+                <span class="card-show-left-content-first-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/BTC_Logo.svg/2000px-BTC_Logo.svg.png" alt="Bitcoin logo"></span>
+                <span><strong>BTC</strong> price $<%= number_with_delimiter(@btc_usd.to_i, :delimiter => ',') %></span><br>
+              </div>
+            </a>
+            <a href="https://www.coingecko.com/en/coins/ethereum">
+              <div class="d-flex mb-1">
+              <span class="card-show-left-content-first-logo"><img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png" alt="Ethereum logo"></span>
+                <span><strong>ETH</strong> price $<%= number_with_delimiter(@eth_usd.to_i, :delimiter => ',') %></span><br>
+              </div>
+            </a>
+            <a href="https://www.coingecko.com/en/coins/axie-infinity">
+              <div class="d-flex mb-1">
+                <span class="card-show-left-content-first-logo"><img src="https://seeklogo.com/images/A/axie-infinity-axs-logo-57FE26A5DC-seeklogo.com.png" alt="Axs logo"></span>
+                <span><strong>AXS</strong> price $<%= number_with_delimiter(@axs_usd.to_i, :delimiter => ',') %></span><br>
+              </div>
+            </a>
+            <a href="https://www.coingecko.com/en/coins/smooth-love-potion">
+              <div class="d-flex mb-1">
+                <span class="card-show-left-content-first-logo"><img src="https://cryptologos.cc/logos/smooth-love-potion-slp-logo.png" alt="SLP logo"></span>
+                <span><strong>SLP</strong> price $<%= number_with_delimiter(@slp_usd.round(3), :delimiter => ',') %></span><br>
+              </div>
+            </a>
+            <a href="https://www.coingecko.com/en/coins/ronin">
+              <div class="d-flex">
+                <span class="card-show-left-content-first-logo"><img src="https://s2.coinmarketcap.com/static/img/coins/64x64/14101.png" alt="Ronin logo"></span>
+                <span><strong>RON</strong> price $<%= number_with_delimiter(@ron_usd.round(2), :delimiter => ',') %></span>
+              </div>
+            </a>
+          </div>
 
       </div>
       <div class="card-show-left">
@@ -59,74 +60,74 @@
       </div>
     </div>
     <div class="user-stats">
-
-      <div class="d-flex justify-content-between">
-        <div class="card-summary">
-          <p class="underline number-size"><%= @user.teams.exists? ? number_with_delimiter(@current_slp, :delimiter => ',') : "- " %></p>
-          <p>Claimable SLP's</p>
-        </div>
-        <div class="card-summary">
-          <p class="underline number-size"><%= @user.teams.exists? ? ((@wins.to_f / @battles.to_f) * 100).to_i : "- " %>%</p>
-          <p>Win Rate</p>
-        </div>
-        <div class="card-summary">
-          <p class="underline number-size"><%= @user.teams.exists? ? number_with_delimiter(@mmr.max, :delimiter => ',') : "- " %></p>
-          <p>Highest MMR</p>
-        </div>
-        <div class="card-summary">
-          <p class="underline number-size"><%= @user.teams.exists? ? number_with_delimiter(@mmr.min, :delimiter => ',') : "- " %></p>
-          <p>Lowest MMR</p>
-        </div>
-      </div>
-
-      <div class="mt-4 table-of-contents">
-        <div class = "row-headers">
-          <div class= "d-flex w-100">
-            <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
-              <strong>Scholar name</strong>
-            </div>
-            <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
-              <strong>Win rate</strong>
-            </div>
-            <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
-              <strong>MMR</strong>
-            </div>
-            <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
-              <strong>Rank</strong>
-            </div>
-            <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
-              <strong>Claimable SLPs</strong>
-            </div>
-            <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
-              <strong>Total SLP</strong>
-            </div>
-            <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
-              <strong>Next claim</strong>
-            </div>
+      <div class="stuck">
+        <div class="d-flex justify-content-between">
+          <div class="card-summary">
+            <p class="underline number-size"><%= @user.teams.exists? ? number_with_delimiter(@current_slp, :delimiter => ',') : "- " %></p>
+            <p>Claimable SLP's</p>
+          </div>
+          <div class="card-summary">
+            <p class="underline number-size"><%= @user.teams.exists? ? ((@wins.to_f / @battles.to_f) * 100).to_i : "- " %>%</p>
+            <p>Win Rate</p>
+          </div>
+          <div class="card-summary">
+            <p class="underline number-size"><%= @user.teams.exists? ? number_with_delimiter(@mmr.max, :delimiter => ',') : "- " %></p>
+            <p>Highest MMR</p>
+          </div>
+          <div class="card-summary">
+            <p class="underline number-size"><%= @user.teams.exists? ? number_with_delimiter(@mmr.min, :delimiter => ',') : "- " %></p>
+            <p>Lowest MMR</p>
           </div>
         </div>
-        <div class="scholars-breakdown " id="results">
-          <% @user.teams.each do |team| %>
-            <%= render 'list_teams', team: team %>
+
+        <div class="mt-4 table-of-contents">
+          <div class = "row-headers">
+            <div class= "d-flex w-100">
+              <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
+                <strong>Scholar name</strong>
+              </div>
+              <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
+                <strong>Win rate</strong>
+              </div>
+              <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
+                <strong>MMR</strong>
+              </div>
+              <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
+                <strong>Rank</strong>
+              </div>
+              <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
+                <strong>Claimable SLPs</strong>
+              </div>
+              <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
+                <strong>Total SLP</strong>
+              </div>
+              <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
+                <strong>Next claim</strong>
+              </div>
+            </div>
+          </div>
+          <div class="scholars-breakdown" id="results" >
+            <% @user.teams.each do |team| %>
+              <%= render 'teams/list_teams', team: team %>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="mt-5">
+          <% if (current_user.present?) && (current_user.id == params[:id].to_i) %>
+            <%= simple_form_for @team, url: "/ronin_address", :method => :post, html: { class: "d-flex justify-content-center mt-2"}, defaults: { wrapper: false }, remote: true do |f| %>
+              <div class="">
+                <div class="d-flex form-input h-100">
+                  <%= f.input :scholar_name, label: false, input_html: { class: "visible-input"}, placeholder: 'Scholar name' %>
+                  <%= f.input :ronin_address, label: false, input_html: { class: "visible-input"}, placeholder: 'Ronin address' %>
+                  <%= f.input :user_id, :as => :hidden, :input_html => { :value => @user.id } %>
+                </div>
+              </div>
+              <%= f.submit "Track address", class: "btn-submit" %>
+            <% end %>
           <% end %>
         </div>
       </div>
-
-      <div class="mt-5">
-        <% if (current_user.present?) && (current_user.id == params[:id].to_i) %>
-          <%= simple_form_for @team, url: "/ronin_address", :method => :post, html: { class: "d-flex justify-content-center mt-2"}, defaults: { wrapper: false }, remote: true do |f| %>
-            <div class="">
-              <div class="d-flex form-input h-100">
-                <%= f.input :scholar_name, label: false, input_html: { class: "visible-input"}, placeholder: 'Scholar name' %>
-                <%= f.input :ronin_address, label: false, input_html: { class: "visible-input"}, placeholder: 'Ronin address' %>
-                <%= f.input :user_id, :as => :hidden, :input_html => { :value => @user.id } %>
-              </div>
-            </div>
-            <%= f.submit "Track address", class: "btn-submit" %>
-          <% end %>
-        <% end %>
-      </div>
-
     </div>
 
 

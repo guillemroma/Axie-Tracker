@@ -1,0 +1,43 @@
+<div class="d-flex ranking-table justify-content-center">
+  <div class="mt-4 ranking-content justify-content-center" data-controller="search-players">
+    <%= form_with url: "/ranking", method: :get, html: { class: "mb-4", data: { search_players_target: "searchForm" } } do |f| %>
+      <div class="d-flex form-input h-100 justify-content-center">
+        <%= f.text_field :query,
+                        class: "visible-input-search",
+                        placeholder: "Search a name",
+                        value: params[:query],
+                        data: {
+                          search_players_target: "input",
+                          action: "keyup->search-players#update"
+                        } %>
+      </div>
+    <% end %>
+    <div class = "ranking-row-headers">
+      <div class= "d-flex">
+        <div class="table-input-ranking-1-header d-flex align-items-center justify-content-center m-0">
+          <strong>Ranking</strong>
+        </div>
+        <div class="table-input-ranking-2-header d-flex align-items-center justify-content-center m-0">
+          <strong>Name</strong>
+        </div>
+        <div class="table-input-ranking-2-header d-flex align-items-center justify-content-center m-0">
+          <strong>MMR</strong>
+        </div>
+      </div>
+    </div>
+    <div class="scholars-breakdown ">
+      <div>
+        <%= render 'list_ranking', ranking: @ranking %>
+        <div class='mt-3 pagination-row'>
+          <div class='padding-zero d-flex justify-content-center'>
+            <ul class='pagination'>
+              <li class='disabled'>
+                <%= will_paginate(@ranking,:previous_label => '&laquo;', :next_label => '&raquo;',:class=>'small-font',:outer_window => 1,:inner_window => 0) %>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
