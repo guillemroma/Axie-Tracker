@@ -1,0 +1,29 @@
+<div class="card">
+  <div class="card-avatar d-flex justify-content-center">
+    <img src="https://i.pinimg.com/originals/6b/73/f5/6b73f582d6ba44e65ddea1ed0a073bc6.png" class="card-user-photo" alt="avatar">
+  </div>
+  <div class="card-username d-flex justify-content-center">
+    <h5 class="underline"><%= user.username.nil? ? "-" : user.username %></h5>
+  </div>
+  <div class="card-user-stats d-flex justify-content-between">
+    <div class="m-2 number-teams">
+      <div class="d-flex justify-content-center nummber">
+        <p><%= user.teams.nil? ? 0 : user.teams.count %></p>
+      </div>
+      <div class="d-flex justify-content-center">
+        <%= user.teams.count != 1 ? "Teams" : "Team" %>
+      </div>
+    </div>
+    <div class="m-2 number-teams">
+      <div class="d-flex justify-content-center nummber">
+        <p><%= user.followers_as_follower.nil? ? 0 : user.followers_as_follower.count %></p>
+      </div>
+      <div class="d-flex justify-content-center">
+        <%= user.followers_as_follower != 1 ? "Followers" : "Follower" %>
+      </div>
+    </div>
+  </div>
+  <div class="card-button">
+    <%= button_to "Follow", new_follower_path(user.id) %>
+  </div>
+</div>

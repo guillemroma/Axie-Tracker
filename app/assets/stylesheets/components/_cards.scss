@@ -76,26 +76,62 @@
 
 .card {
   width: 200px;
-  height: 300px;
-  border-radius: 3px;
+  border-radius: 10px;
+  background-color: #FAFBFA;
+  border: none;
 }
 
 .card-avatar {
   height:40%;
-  border: solid;
+  min-height: 110px;
+
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-bottom: none;
 }
 
 .card-username {
   height:10%;
-  border: solid;
+  min-height: 29px;
+
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-bottom: none;
+  border-top: none;
 }
 
 .card-user-stats {
   height:35%;
-  border: solid;
+  min-height: 100px;
+
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-bottom: none;
+  border-top: none;
 }
 
 .card-button {
   height:15%;
-  border: solid;
+  min-height: 42px;
+}
+
+.card-user-photo {
+  height: 95%;
+  width: 70%;
+  border-radius: 50%;
+
+  margin: auto;
+  border-color: white;
+}
+
+.number-teams {
+  width: 50%;
+  border-bottom: none;
+}
+
+.nummber {
+  p {
+    font-size: 30px;
+    font-weight: bolder;
+    color: #21B6A8;
+  }
 }

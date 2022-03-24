@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   patch "/ronin_address/:id", to: "teams#update", as: :scholar_name_update
   delete "/ronin_address/:id", to: "teams#destroy", as: :destroy_account
 
-
+  post '/follower/:id', to: 'followers#new', as: :new_follower
+  delete '/follower/:id', to: 'followers#destroy', as: :destroy_follower
 
 end

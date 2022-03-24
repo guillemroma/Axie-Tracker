@@ -44,7 +44,7 @@
           <h4 class="mt-1 mb-1">Axie in the News</h4>
         </div>
         <% until @article_count == 10 do %>
-          <div class="card-show-left-news mt-2 d-flex justify-content-center align-middle">
+          <div class="card-show-left-news mt-2 d-flex justify-content-start align-middle">
             <a href="<%= @articles["results"][@article_count]["url"] %>" target="_blank">
               <div class="mb-2 news-content">
                 🔥 <strong class="underline"><%= @articles["results"][@article_count]["title"] %></strong>
