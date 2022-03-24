@@ -1,11 +1,12 @@
 import { Controller } from "stimulus"
 
 export default class extends Controller {
-  static targets = ["form", "scholar", "arrow"]
+  static targets = ["form", "deleteButton", "scholar", "arrow"]
 
   updateArrowToggle() {
 
     this.formTarget.classList.toggle("d-none");
+    this.deleteButtonTarget.classList.toggle("d-none");
 
     const arrowElement = this.arrowTarget
 
@@ -13,13 +14,13 @@ export default class extends Controller {
 
       arrowElement.classList.remove("arrow-up");
       arrowElement.classList.add("arrow-down");
-      arrowElement.src = "https://cdn0.iconfinder.com/data/icons/ecommerce-121/24/drop-down_up-512.png";
+      arrowElement.src = "https://static.thenounproject.com/png/517806-200.png";
 
     } else {
 
       arrowElement.classList.remove("arrow-down");
       arrowElement.classList.add("arrow-up");
-      arrowElement.src = "https://cdn0.iconfinder.com/data/icons/ecommerce-121/24/drop-down_down-512.png";
+      arrowElement.src = "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.clipartbest.com%2Fcliparts%2Face%2FXMb%2FaceXMbaEi.png&f=1&nofb=1";
 
     }
 
@@ -33,7 +34,8 @@ export default class extends Controller {
 
     fetch(url, {
       method: "PATCH",
-      headers: { "Accept": "text/plain" },
+      headers: { "Accept": "text/plain",
+        "X-CSRF-Token": document.querySelector("[name='csrf-token']").content },
       body: new FormData(this.formTarget)
     })
       .then(response => response.text())

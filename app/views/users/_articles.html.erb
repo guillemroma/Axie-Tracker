@@ -1,0 +1,12 @@
+<div class="card-show-left-news d-flex justify-content-start">
+  <a href="<%= @articles["results"][@article_count]["url"] %>" target="_blank">
+    <div class="mb-2 news-content">
+      <strong><%= @articles["results"][@article_count]["title"] %></strong>
+    </div>
+    <div class="news-content">
+      Source: <%= @articles["results"][@article_count]["domain"] %><br>
+      Date: <%= @articles["results"][@article_count]["published_at"].to_date %>
+    </div>
+  </a>
+  <% @article_count +=1 %>
+</div>

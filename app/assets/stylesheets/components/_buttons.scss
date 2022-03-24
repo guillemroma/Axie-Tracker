@@ -2,7 +2,7 @@
     color: #fff;
     background-color: #21B6A8;
     border: none;
-    border-radius: 150px;
+    border-radius: 200px;
     padding: 10px;
     padding-right: 15px;
     padding-left: 15px;
@@ -40,18 +40,60 @@
 .card-button {
 
   form {
+
     height: 100%;
+
+    input {
+
+      width: 100%;
+      height: 100%;
+      border: 1px solid rgba(0, 0, 0, 0.125);
+      border-top: none;
+      color: #21B6A8;
+      background-color: transparent;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+
+    }
   }
+
+  form.add {
+
+    input {
+
+      width: 100%;
+      height: 100%;
+      border: solid;
+      border-color: #21B6A8 !important;
+      color: #fff !important;
+      background-color: #21B6A8 !important;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+
+    }
+  }
+}
+
+
+
+.team-delete-button {
+
+  margin: auto;
+  margin-left: 5px;
 
   input {
-
-    width: 100%;
-    height: 100%;
-    border: solid;
-    border-color: #21B6A8;
     color: #fff;
-    background-color: #21B6A8;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
+    background-color: rgb(240, 99, 99);
+    border: none;
+    border-radius: 150px;
+    padding: 0%;
+    padding-right: 15px;
+    padding-left: 15px;
+    transition: transform 1s;
+    height: 24px !important;
   }
+}
+
+.team-delete-button:hover input {
+  transform: scale(1.01);
 }
