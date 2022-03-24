@@ -1,5 +1,4 @@
 class UsersController < ApplicationController
-  skip_before_action :verify_authenticity_token
   skip_before_action :authenticate_user!, :raise => false
   require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/add_axie.rb'
   require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/exchange.rb'

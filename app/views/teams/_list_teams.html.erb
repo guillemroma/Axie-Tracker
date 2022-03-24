@@ -4,7 +4,7 @@
       <div class="table-input d-flex align-items-center justify-content-left m-1">
         <% if current_user == team.user %>
           <div class="d-flex edit-address" data-action="click->update-users#updateArrowToggle">
-            <img src="https://cdn0.iconfinder.com/data/icons/ecommerce-121/24/drop-down_down-512.png" alt="edit option" data-update-users-target="arrow" class="arrow-up">
+            <img src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.clipartbest.com%2Fcliparts%2Face%2FXMb%2FaceXMbaEi.png&f=1&nofb=1" alt="edit option" data-update-users-target="arrow" class="arrow-up">
           </div>
         <% end %>
         <div>
@@ -31,22 +31,27 @@
       </div>
     </div>
     <% if current_user == team.user %>
-      <div class = "empty-row mt-0 mb-0 w-100">
-        <%= simple_form_for team, url: "/ronin_address/#{team.id}",
-          :method => :patch,
-          html: { class: "d-flex justify-content-left mt-2 d-none", data: { update_users_target: "form", action: "submit->update-users#updateScholarName" }},
-          defaults: { wrapper: false },
-          remote: true do |f| %>
-          <div class="">
-            <div class="d-flex form-input h-100">
-              <%= f.input :scholar_name, label: false, input_html: { class: "visible-input-update"}, placeholder: 'New scholar name' %>
-              <%= f.input :ronin_address, :as => :hidden, :input_html => { :value => team.ronin_address } %>
+      <div class="d-flex">
+        <div class = "empty-row mt-0 mb-0 w-100 d-flex justify-content-start">
+          <%= simple_form_for team, url: "/ronin_address/#{team.id}",
+            :method => :patch,
+            html: { class: "d-flex justify-content-left mt-2 d-none", data: { update_users_target: "form", action: "submit->update-users#updateScholarName" }},
+            defaults: { wrapper: false },
+            remote: true do |f| %>
+            <div class="">
+              <div class="d-flex form-input h-100">
+                <%= f.input :scholar_name, label: false, input_html: { class: "visible-input-update"}, placeholder: 'New scholar name' %>
+                <%= f.input :ronin_address, :as => :hidden, :input_html => { :value => team.ronin_address } %>
+              </div>
             </div>
+            <div class="submit" >
+              <%= f.submit "Update"%>
+            </div>
+          <% end %>
+          <div class="team-delete-button">
+            <%= button_to "Delete scholar", "/ronin_address/#{(team.id)}", method: :delete, class: "d-none", data: { update_users_target: "deleteButton", confirm: "You will delete #{team.scholar_name.present? ? team.scholar_name : ""}, are you sure?"} %>
           </div>
-          <div class="submit">
-            <%= f.submit "Update" %>
-          </div>
-        <% end %>
+        </div>
       </div>
     <% end %>
   </div>

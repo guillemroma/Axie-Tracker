@@ -86,6 +86,15 @@ class TeamsController < ApplicationController
 
   end
 
+  def destroy
+    team = Team.find(params["id"])
+    @user = team.user_id
+    team.destroy
+
+    redirect_to "/users/#{@user}"
+
+  end
+
   private
 
   def ronin_address_params
