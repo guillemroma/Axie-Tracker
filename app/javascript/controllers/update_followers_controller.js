@@ -23,7 +23,7 @@ export default class extends Controller {
         .then((data) => {
           this.cardTarget.outerHTML = data;
           this.cardTarget.querySelector('.favorite').classList.remove("add");
-          this.cardTarget.querySelector('.form-favorites-input').value = "Remove favorite"
+          this.cardTarget.querySelector('.form-favorites-input').value = "Unfollow"
         })
 
     } else {
@@ -44,7 +44,7 @@ export default class extends Controller {
         .then((data) => {
           this.cardTarget.outerHTML = data;
           this.cardTarget.querySelector('.favorite').classList.add("add");
-          this.cardTarget.querySelector('.form-favorites-input').value = "Add favorite"
+          this.cardTarget.querySelector('.form-favorites-input').value = "Follow"
         })
 
     }
