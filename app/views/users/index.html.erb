@@ -1,13 +1,5 @@
 <div class="container mt-5 d-flex justify-content-start">
-  <div class="card">
-    <div class="card-avatar">
-      <img src="https://i.pinimg.com/originals/6b/73/f5/6b73f582d6ba44e65ddea1ed0a073bc6.png" class="avatar" alt="avatar">
-    </div>
-    <div class="card-username">
-    </div>
-    <div class="card-user-stats">
-    </div>
-    <div class="card-button">
-    </div>
-  </div>
+  <% @users.each do |user| %>
+   <%= render 'user_card', user: user%>
+  <% end %>
 </div>
