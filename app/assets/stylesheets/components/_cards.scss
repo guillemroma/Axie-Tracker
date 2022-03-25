@@ -188,3 +188,24 @@
     color: #21B6A8;
   }
 }
+
+.card {
+
+  padding: 0px;
+  margin-bottom: 10px;
+
+  a {
+    color: rgb(99, 97, 97);
+    text-decoration: none;
+  }
+}
+
+.row {
+  background-color: transparent;
+  width: 100%;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 2fr 2fr 2fr 2fr;
+}

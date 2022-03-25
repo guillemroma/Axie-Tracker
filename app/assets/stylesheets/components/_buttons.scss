@@ -97,3 +97,22 @@
 .team-delete-button:hover input {
   transform: scale(1.01);
 }
+
+input.visible-input-index {
+  height: 60%;
+}
+
+.submit-button-index {
+  input {
+      width: 100%;
+      height: 60%;
+      border: solid;
+      border-color: #21B6A8;
+      color: #fff;
+      background-color: #21B6A8;
+      border-radius: 150px;
+      bottom: 0px;
+      margin-top: 40%;
+
+  }
+}

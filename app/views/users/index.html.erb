@@ -1,53 +1,56 @@
 <div class="container">
-  <div class="row" data-controller="replace-wins" >
-    <form action="/users" method="get" data-action="submit->replace-wins#replaceWinRate" data-replace-wins-target="form">
-      <div class="d-flex mt-1 mb-2 index-form">
-        <div class="form-div-input">
-          <label for="MMR" class="from-label-project-index"> MMR </label>
-          <input list="MMRs" name="MMR" id="MMR" class="form-control-project-index mr-2" placeholder="ex: 1,100">
+  <div class="d-flex user-show-filter">
+    <form action="/users" method="get">
+      <div class="d-flex mt-1 mb-2">
+        <div class="form-input">
+          <label for="MMR"> MMR </label><br>
+          <input list="MMRs" name="MMR" id="MMR" class="visible-input-index mr-2" placeholder="ex: 0 - 1,000">
           <datalist id="MMRs">
             <% @mmr_array.each do | mmr | %>
               <option value="<%= mmr %>">
             <% end %>
           </datalist>
         </div>
-        <div>
-          <label for="win-rate" class="from-label-project-index"> Win rate </label>
-          <input list="win-rates" name="win-rate" id="win-rate" class="form-control-project-index mr-2" placeholder="ex: 51%">
+        <div class="form-input">
+          <label for="win-rate"> Win rate </label>
+          <input list="win-rates" name="win-rate" id="win-rate" class="visible-input-index mr-2" placeholder="ex: 0% - 20%">
           <datalist id="win-rates">
             <% @win_rates_array.each do | win_rate | %>
-              <option data-replace-wins-target="option" data-value="<%= win_rate %>" > <%= (win_rate * 100).to_i %>% </option>
+              <option> <%= win_rate %> </option>
             <% end %>
           </datalist>
         </div>
-        <div class="end-div">
-          <label for="team" class="from-label-project-index">Team(s)</label>
-          <input list="teams" name="team" id="team" class="form-control-project-index mr-2" placeholder="ex: 1">
+        <div class="form-input">
+          <label for="team"># of Teams</label>
+          <input list="teams" name="team" id="team" class="visible-input-index mr-2" placeholder="ex: 0 - 1,000">
           <datalist id="teams">
             <% @teams_count_array.each do | team_count | %>
               <option value="<%= team_count %>">
             <% end %>
           </datalist>
         </div>
-        <div class="guest-div">
-          <label for="slp" class="from-label-project-index collaborator">Total SLP(s)</label>
-          <input list="slps" name="slp" id="slp" class="form-control-project-index mr-2" placeholder="ex: 1,000">
+        <div class="form-input">
+          <label for="slp">Total SLP</label>
+          <input list="slps" name="slp" id="slp" class="visible-input-index mr-2" placeholder="ex: 0 - 1">
           <datalist id="slps">
             <% @total_slps_array.each do | total_slps | %>
               <option value="<%= total_slps %>">
             <% end %>
           </datalist>
         </div>
-        <div class="submit">
-          <input type="submit" class="home-page-btn-project-index" value="Go">
+        <div class="submit-button-index">
+          <input type="submit" class="home-page-btn-project-index" value="Filter">
         </div>
       </div>
     </form>
   </div>
-
   <div class="container mt-5 d-flex justify-content-start" data-controller="update-followers" >
-    <% @users.each do |user| %>
-    <%= render 'user_card', user: user%>
-    <% end %>
+    <div class="row">
+      <div class="grid">
+        <% @users.each do |user| %>
+          <%= render 'user_card', user: user%>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
