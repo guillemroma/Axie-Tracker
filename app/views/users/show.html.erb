@@ -1,6 +1,6 @@
 <div class="user-show d-flex justify-content-between">
     <div class="general-stats">
-      <div class="card-show-left" >
+      <div class="card-show-left mb-4" >
         <div class="card-show-left-content-first">
           <a href="https://www.coingecko.com/en/coins/bitcoin">
             <div class="d-flex mb-1">
@@ -36,7 +36,7 @@
       </div>
       <div class="card-show-left favorite">
         <div class="card-show-left-title d-flex justify-content-center">
-          <h4 class="mt-1 mb-1">Favorite Managers</h4>
+          <h5 class="mt-1 mb-1">Favorite Managers</h5>
         </div>
         <% if @user.followers_as_follower.present?  %>
           <% @user.followers_as_follower.each do |favorite_instance| %>
@@ -47,7 +47,7 @@
       <div class="card-show-left" data-controller="display-info">
         <div class="card-show-left-title d-flex justify-content-center">
           <div class="card-show-left-title-letters d-flex justify-content-center">
-            <h4 class="mt-1 mb-1">Axie in the News</h4>
+            <h5 class="mt-1 mb-1">Axie in the News</h5>
             <img data-action="click->display-info#toggleContent" data-display-info-target="icon" class="plus" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.iconsdb.com%2Ficons%2Fpreview%2Fwhite%2Fplus-xxl.png&f=1&nofb=1" class="card-user-photo" alt="avatar">
           </div>
         </div>
@@ -60,22 +60,22 @@
     </div>
     <div class="user-stats">
       <div class="stuck">
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between mb-5">
           <div class="card-summary">
             <p class="underline number-size"><%= @user.teams.exists? ? number_with_delimiter(@current_slp, :delimiter => ',') : "- " %></p>
-            <p>Claimable SLP's</p>
+            <h5>Claimable SLP's</h5>
           </div>
           <div class="card-summary">
             <p class="underline number-size"><%= @user.teams.exists? ? ((@wins.to_f / @battles.to_f) * 100).to_i : "- " %>%</p>
-            <p>Win Rate</p>
+            <h5>Win Rate</h5>
           </div>
           <div class="card-summary">
             <p class="underline number-size"><%= @user.teams.exists? ? number_with_delimiter(@mmr.max, :delimiter => ',') : "- " %></p>
-            <p>Highest MMR</p>
+            <h5>Highest MMR</h5>
           </div>
           <div class="card-summary">
             <p class="underline number-size"><%= @user.teams.exists? ? number_with_delimiter(@mmr.min, :delimiter => ',') : "- " %></p>
-            <p>Lowest MMR</p>
+            <h5>Lowest MMR</h5>
           </div>
         </div>
 
@@ -122,7 +122,7 @@
                   <%= f.input :user_id, :as => :hidden, :input_html => { :value => @user.id } %>
                 </div>
               </div>
-              <%= f.submit "Track address", class: "btn-submit" %>
+              <%= f.submit "Add scholar", class: "btn-submit" %>
             <% end %>
           <% end %>
         </div>
