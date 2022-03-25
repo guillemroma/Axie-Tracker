@@ -19,25 +19,40 @@ class UsersController < ApplicationController
 
       #when we pass information in any of the parameters throught the project index filter we activate the filter
       #in case there is one or more params without values we select all the projects by default, otherwise we select the values passed
-      raise
-      @users_mmr = (params[:MMR].blank?) ? User.all : User.joins(:teams).group("users.id").having("avg(mmr) = ?", params[:MMR].to_i)
-      @users_win_rate = (params["win-rate"].split().first.to_i.blank?) ? User.all : User.joins(:teams).group("users.id").having("avg(win_rate) = ?", ((params["win-rate"].to_f)/100))
-      @users_team = (params[:team].blank?) ? User.all : User.joins(:teams).group("users.id").having("COUNT (*) = ?", params[:team].to_i)
-      @users_slp = (params[:slp].blank?) ? User.all : User.joins(:teams).having("SUM(total_slp) = ?", params[:slp].to_i).group("users.id")
+      if params[:MMR].blank?
+        @users_mmr = User.all
+      elsif params[:MMR] == "+ 2500"
+        @users_mmr = User.joins(:teams).group("users.id").having("avg(mmr) >= ?", 2500)
+      else
+        @users_mmr = User.joins(:teams).group("users.id").having("avg(mmr) >= ? AND avg(mmr) <= ?", params[:MMR].gsub(/,/,"").split().first.to_i, params[:MMR].gsub(/,/,"").split().last.to_i)
+      end
+
+      @users_win_rate = (params["win-rate"].blank?) ? User.all : User.joins(:teams).group("users.id").having("avg(win_rate) * 100 >= ? AND avg(win_rate) * 100 <= ?", params["win-rate"].gsub(/%/,"").split.first.to_i, params["win-rate"].gsub(/%/,"").split.last.to_i)
+
+      if params[:team].blank?
+        @users_team = User.all
+      elsif params[:team] == "+ 100"
+        @users_team = User.joins(:teams).group("users.id").having("COUNT (*) >= ?", 100)
+      else
+        @users_team = User.joins(:teams).group("users.id").having("COUNT (*) >= ? AND COUNT (*) <= ?", params[:team].gsub(/,/,"").split().first.to_i, params[:team].gsub(/,/,"").split().last.to_i)
+      end
+
+
+      if params[:slp].blank?
+        @users_slp = User.all
+      elsif params[:slp] == "+ 1,000,000"
+        @users_slp = User.joins(:teams).group("users.id").having("SUM(total_slp) >= ?", 1000000)
+      else
+        @users_slp = User.joins(:teams).group("users.id").having("SUM(total_slp) >= ? AND SUM(total_slp) <= ?", params[:slp].gsub(/,/,"").split().first.to_i, params[:slp].gsub(/,/,"").split().last.to_i)
+      end
 
       @users = []
-
-      #the filter will select all the projects that share the values defined in the filter (no value == all values)
-      #it will check what projects are in the 4 different variables predefined before
-      #in case there is a project that is shared across the 4 variables, it will display it
-
 
       @users_mmr.each do |user|
         if @users_win_rate.include?(user) && @users_team.include?(user) && @users_slp.include?(user)
           @users << user
         end
       end
-
     end
 
     #we create the filter options as follows
@@ -45,43 +60,10 @@ class UsersController < ApplicationController
     #in case there are duplicates, we need to earse them
     #finally, we need to sort the items in each array
 
-    @mmr_array = []
-
-    User.all.each do |user|
-      mmr = 0
-      user.teams.each do |team|
-        mmr += team.mmr
-      end
-      @mmr_array << (mmr / user.teams.count)
-    end
-    @mmr_array = @mmr_array.uniq.sort
-
-    @win_rates_array = []
-
-    User.all.each do |user|
-      win_rate = 0
-      user.teams.each do |team|
-        win_rate += team.win_rate.to_f
-      end
-      @win_rates_array << (win_rate / user.teams.count)
-    end
-    @win_rates_array = @win_rates_array.uniq.sort
-
-    @teams_count_array = []
-    User.all.each do |user|
-      @teams_count_array << user.teams.count
-    end
-    @teams_count_array = @teams_count_array.uniq.sort
-
-    @total_slps_array = []
-    User.all.each do |user|
-      user_slp = 0
-      user.teams.each do |team|
-        user_slp += team.total_slp
-      end
-      @total_slps_array << user_slp
-    end
-    @total_slps_array = @total_slps_array.uniq.sort
+    @mmr_array = ["1 - 1,000", "1,000 - 1,500", "1,500 - 2,000", "2,000 - 2,225", "2,225 - 2,500", "+ 2,500"]
+    @win_rates_array = ["0% - 20%", "20% - 40%", "40% - 60%", "60% - 80%", "80% - 100%"]
+    @teams_count_array = ["1 - 3", "3 - 5", "5 - 10", "10- 20", "20 - 50", "50 - 100", "+ 100"]
+    @total_slps_array = ["1 - 1,000", "1,000 - 5,000", "5,000 - 15,000", "15,000 - 30,000", "30,000 - 60,000", "60,000 - 100,000", "100,000 - 500,000", "+ 1,000,000"]
 
   end
 

@@ -1,6 +1,6 @@
-.row {
+.index-row {
   height: 7%;
-  margin-bottom: 2px;
+  margin-top: 2px;
   border-style: solid;
   border-color: #21B6A8;
   border-radius: 5px;
@@ -12,7 +12,7 @@
   width: 14.28%;
 }
 
-.row-headers {
+.index-row-headers {
   height: 8%;
   margin-bottom: 1.5%;
 
@@ -118,5 +118,3 @@
   position: fixed;
   width: 100%;
 }
-
-

@@ -5,10 +5,11 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :teams, dependent: :destroy
-  has_many :favorites, dependent: :destroy
 
-  has_many :followeds_as_followed, class_name: "Follower", foreign_key: :followed_id
-  has_many :followers_as_follower, class_name: "Follower", foreign_key: :follower_id
+  has_many :followeds_as_followed, class_name: "Follower", foreign_key: :followed_id, dependent: :destroy
+  has_many :followers_as_follower, class_name: "Follower", foreign_key: :follower_id, dependent: :destroy
 
+  validates :username, presence: true
+  validates :username, uniqueness: true
 
 end
