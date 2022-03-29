@@ -36,7 +36,7 @@
       </div>
       <div class="card-show-left favorite">
         <div class="card-show-left-title d-flex justify-content-center">
-          <h5 class="mt-1 mb-1">Favorite Managers</h5>
+          <strong class="mt-1 mb-1">Favorite Managers</strong>
         </div>
         <% if @user.followers_as_follower.present?  %>
           <% @user.followers_as_follower.each do |favorite_instance| %>
@@ -47,7 +47,7 @@
       <div class="card-show-left" data-controller="display-info">
         <div class="card-show-left-title d-flex justify-content-center">
           <div class="card-show-left-title-letters d-flex justify-content-center">
-            <h5 class="mt-1 mb-1">Axie in the News</h5>
+            <strong class="mt-1 mb-1">Axie in the News</strong>
             <img data-action="click->display-info#toggleContent" data-display-info-target="icon" class="plus" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.iconsdb.com%2Ficons%2Fpreview%2Fwhite%2Fplus-xxl.png&f=1&nofb=1" class="card-user-photo" alt="avatar">
           </div>
         </div>
@@ -66,7 +66,7 @@
             <h5>Claimable SLP's</h5>
           </div>
           <div class="card-summary">
-            <p class="underline number-size"><%= @user.teams.exists? ? ((@wins.to_f / @battles.to_f) * 100).to_i : "- " %>%</p>
+            <p class="underline number-size"><%= @user.teams.exists? ? ((((@wins.to_f / @battles.to_f) * 100).to_i) if (@battles != 0)) : "- " %>%</p>
             <h5>Win Rate</h5>
           </div>
           <div class="card-summary">

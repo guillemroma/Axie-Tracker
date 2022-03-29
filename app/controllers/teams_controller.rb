@@ -51,6 +51,8 @@ class TeamsController < ApplicationController
       Battle.create(team_id: @user_team.id, result: result, battle_uuid: battle_id)
     end
 
+    raise
+
     @team_metrics = AXIEAPI.add_metrics(@address)
     update_team(@user_team, @team_metrics)
 

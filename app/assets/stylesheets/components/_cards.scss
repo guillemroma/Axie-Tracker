@@ -105,7 +105,7 @@
 
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.125);
+
   border-bottom: none;
 }
 
@@ -113,7 +113,7 @@
   height:10%;
   min-height: 29px;
 
-  border: 1px solid rgba(0, 0, 0, 0.125);
+
   border-bottom: none;
   border-top: none;
 }
@@ -122,7 +122,6 @@
   height:35%;
   min-height: 100px;
 
-  border: 1px solid rgba(0, 0, 0, 0.125);
   border-bottom: none;
   border-top: none;
 }
@@ -197,6 +196,11 @@
   a {
     color: rgb(99, 97, 97);
     text-decoration: none;
+    height: fit-content;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom: none;
   }
 }
 

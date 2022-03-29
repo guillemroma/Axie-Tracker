@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="table-input d-flex align-items-center justify-content-center m-0">
-        <%= team.win_rate.present? ? (team.win_rate * 100).to_i : "" %>%
+        <%= (team.win_rate.present? && !team.win_rate.nan?) ? "#{(team.win_rate * 100).to_i} %" : "-" %>
       </div>
       <div class="table-input d-flex align-items-center justify-content-center m-0">
         <%= team.mmr.present? ? number_with_delimiter(team.mmr, :delimiter => ',') : "" %>

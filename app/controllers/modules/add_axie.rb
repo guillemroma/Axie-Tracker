@@ -32,7 +32,6 @@ module AXIEAPI
     request = Net::HTTP::Get.new(url)
     response = http.request(request)
     json_response = JSON.parse(response.body)
-
   end
 
   def AXIEAPI.check_win_rate(team)
