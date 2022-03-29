@@ -16,4 +16,7 @@ Rails.application.routes.draw do
   post '/follower/:id', to: 'followers#new', as: :follower_action
   delete '/follower/:id', to: 'followers#destroy'
 
+  get "/teams/:id", to: "teams#show"
+
+
 end

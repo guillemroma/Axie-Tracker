@@ -37,6 +37,7 @@ gem 'coingecko_ruby'
 gem 'turbolinks_render'
 gem 'will_paginate'
 gem 'faker'
+gem "groupdate"
 
 gem 'autoprefixer-rails', '10.2.5'
 gem 'font-awesome-sass'

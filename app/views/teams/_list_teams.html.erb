@@ -1,4 +1,4 @@
-<div  data-controller="update-users" data-update-users-target="scholar">
+<div data-controller="update-users" data-update-users-target="scholar">
   <div class = "index-row">
     <div class= "d-flex">
       <div class="table-input d-flex align-items-center justify-content-left m-1">
@@ -7,8 +7,10 @@
             <img src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.clipartbest.com%2Fcliparts%2Face%2FXMb%2FaceXMbaEi.png&f=1&nofb=1" alt="edit option" data-update-users-target="arrow" class="arrow-up">
           </div>
         <% end %>
-        <div>
-          <strong><%= team.scholar_name.present? ? team.scholar_name : "" %></strong>
+        <div class="scholar-table-row">
+          <a href="/teams/<%= team.id %>">
+            <strong><%= team.scholar_name.present? ? team.scholar_name : "" %></strong>
+          </a>
         </div>
       </div>
       <div class="table-input d-flex align-items-center justify-content-center m-0">

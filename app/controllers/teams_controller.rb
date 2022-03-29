@@ -5,6 +5,57 @@ class TeamsController < ApplicationController
   require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/exchange.rb'
   require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/coin.rb'
   require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/info.rb'
+  require 'date'
+
+  def show
+
+    @team = Team.find(params[:id])
+
+    CumulativeEarning.create(team_id: @team.id, total_slp: @team.current_slp, date: (Date.today))
+    CumulativeEarning.create(team_id: @team.id, total_slp: 150, date: (Date.today - 1))
+    CumulativeEarning.create(team_id: @team.id, total_slp: 100, date: (Date.today - 2))
+    CumulativeEarning.create(team_id: @team.id, total_slp: 80, date: (Date.today - 3))
+    CumulativeEarning.create(team_id: @team.id, total_slp: 60, date: (Date.today - 4))
+    CumulativeEarning.create(team_id: @team.id, total_slp: 20, date: (Date.today - 5))
+
+    DailyEarning.create(
+      team_id: @team.id,
+      daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", @team.id, Date.today)[0].total_slp - CumulativeEarning.where("team_id = ? AND date = ?", @team.id, (Date.today - 1))[0].total_slp),
+      date: Date.today
+    )
+
+    DailyEarning.create(
+      team_id: @team.id,
+      daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", @team.id, (Date.today - 1))[0].total_slp - CumulativeEarning.where("team_id = ? AND date = ?", @team.id, (Date.today - 2))[0].total_slp),
+      date: (Date.today - 1)
+    )
+
+    DailyEarning.create(
+      team_id: @team.id,
+      daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", @team.id, (Date.today - 2))[0].total_slp - CumulativeEarning.where("team_id = ? AND date = ?", @team.id, (Date.today - 3))[0].total_slp),
+      date: (Date.today - 2)
+    )
+
+    DailyEarning.create(
+      team_id: @team.id,
+      daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", @team.id, (Date.today - 3))[0].total_slp - CumulativeEarning.where("team_id = ? AND date = ?", @team.id, (Date.today - 4))[0].total_slp),
+      date: (Date.today - 3)
+    )
+
+    DailyEarning.create(
+      team_id: @team.id,
+      daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", @team.id, (Date.today - 4))[0].total_slp - CumulativeEarning.where("team_id = ? AND date = ?", @team.id, (Date.today - 5))[0].total_slp),
+      date: (Date.today - 4)
+    )
+
+    @daily_slps = []
+    @dates = []
+    DailyEarning.where(team_id: @team.id).each do |daily_earning|
+      @daily_slps << daily_earning.daily_slp
+      @dates << daily_earning.date
+    end
+
+  end
 
   def create
 
@@ -51,7 +102,13 @@ class TeamsController < ApplicationController
       Battle.create(team_id: @user_team.id, result: result, battle_uuid: battle_id)
     end
 
-    raise
+    CumulativeEarning.create!(team_id: @user_team.id, total_slp: @user_team.total_slp, date: Date.today)
+
+    DailyEarning.create!(
+      team_id: @team.id,
+      daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", @team.id, Date.today)[0].total_slp),
+      date: Date.today
+    )
 
     @team_metrics = AXIEAPI.add_metrics(@address)
     update_team(@user_team, @team_metrics)
@@ -99,14 +156,8 @@ class TeamsController < ApplicationController
 
   private
 
-  def ronin_address_params
-
-    params.require(:team).permit(:ronin_address, :scholar_name)
-
-  end
-
   def update_team(user_team, team_metrics)
-
+    #Update the main team metrics
     user_team.scholar_name = params["team"]["scholar_name"]
     user_team.mmr = team_metrics["mmr"]
     user_team.rank = team_metrics["rank"]
@@ -121,6 +172,7 @@ class TeamsController < ApplicationController
 
   def update_team_background(team, team_metrics, address)
 
+    #Update the main team metrics
     team.mmr = team_metrics["mmr"]
     team.rank = team_metrics["rank"]
     team.current_slp = team_metrics["total_slp"]
@@ -130,6 +182,8 @@ class TeamsController < ApplicationController
     team.win_rate = AXIEAPI.check_win_rate(team)
     team.save
 
+    #Update the Axies that one team has
+    #Update the parts of the axie, in the future this will be upgraded regularly
     AXIEAPI.add_axies(address)["data"]["axies"]["results"].each do |axie|
       axie_genes = AXIEAPI.add_genes_to_axie(axie["id"].to_i)
       Pet.create(
@@ -151,12 +205,48 @@ class TeamsController < ApplicationController
       )
     end
 
+    #update the battles table with the new battles available
     AXIEAPI.add_battles(address)["battles"].each do |battle|
       battle_id = battle["battle_uuid"]
       result = battle["winner"] == address ? "won" : "lost"
       Battle.create(team_id: team.id, result: result, battle_uuid: battle_id)
     end
 
-  end
+    #update the cumulative earning table with the current total_slp
+    record_total_slp = CumulativeEarning.where("team_id = ? AND date = ?", team.id, Date.today)[0]
+    record_total_slp.update(total_slp: team.total_slp)
+    record_total_slp.save
 
+    #update the daily earnings table by first: checking if there is a cumulative record from yesterday to perform a substraction
+    #and later: if that is the case, check if there is any record with date today of daily earning
+    #if both conditions are met, just update the record with the new difference of total_slp (if any)
+    #else, we just update today's daily_slp from daily earnings with today's total_slp from cumulative earning
+    if DailyEarning.all.detect { |hash| hash[:date] == (Date.today) }
+      if CumulativeEarning.all.detect { |hash| hash[:date] == (Date.today - 1) }
+        daily_total_slp = DailyEarning.where("team_id = ? AND date = ?", team.id, Date.today)[0]
+        daily_total_slp.update(daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", team.id, Date.today)[0].total_slp - CumulativeEarning.where("team_id = ? AND date = ?", team.id, (Date.today - 1))[0].total_slp))
+        daily_total_slp.save
+      else
+        daily_total_slp = DailyEarning.where("team_id = ? AND date = ?", team.id, Date.today)[0]
+        daily_total_slp.update(daily_slp: CumulativeEarning.where("team_id = ? AND date = ?", team.id, Date.today)[0].total_slp)
+        daily_total_slp.save
+      end
+    else
+    #if the above conditions are not met, instead of update we will have to create the record
+    #in order to do so, we follow the same logic (checking if there is any record of cumulative earning from yesterday)
+      if CumulativeEarning.all.detect { |hash| hash[:date] == (Date.today - 1) }
+        DailyEarning.create!(
+          team_id: team.id,
+          daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", team.id, Date.today)[0].total_slp - CumulativeEarning.where("team_id = ? AND date = ?", team.id, (Date.today - 1))[0].total_slp),
+          date: Date.today
+        )
+      else
+        DailyEarning.create!(
+          team_id: team.id,
+          daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", team.id, Date.today)[0].total_slp - CumulativeEarning.where("team_id = ? AND date = ?", team.id, (Date.today - 1))[0].total_slp),
+          date: Date.today
+        )
+      end
+    end
+  end
 end

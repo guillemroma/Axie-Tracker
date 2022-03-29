@@ -8,8 +8,6 @@ class UsersController < ApplicationController
 
   def index
 
-
-
     if (params.keys == ["controller", "action"]) && (params[:controller] == "users" && params[:action] == "index") || (params[:MMR] == "" && params["win-rate"] == "" && params[:team] == "" && params[:slp] == "" && params[:controller] == "users" && params[:action] == "index")
 
       #we have grouped the different URLs with no content inside; in that case we want to return all the users since there has not been any filter applied

@@ -27,7 +27,7 @@ avatars = [
 
 20.times do
   user = User.create!(
-    username: "Anonymous#{rand(1..10000)}",
+    username: "Anonymous#{rand(1..9999)}",
     email: Faker::Internet.email,
     password: 123456,
     photo: avatars.sample
