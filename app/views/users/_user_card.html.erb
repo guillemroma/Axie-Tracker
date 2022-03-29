@@ -1,33 +1,35 @@
-<div class="card col-6" data-update-followers-target="card" >
-  <a href="/users/<%= user.id %>">
-    <div class="card-avatar d-flex justify-content-center">
-      <img src="https://i.pinimg.com/originals/6b/73/f5/6b73f582d6ba44e65ddea1ed0a073bc6.png" class="card-user-photo" alt="avatar">
-    </div>
-    <div class="card-username d-flex justify-content-center">
-      <h5 class="underline"><%= user.username.nil? ? "-" : user.username %></h5>
-    </div>
-    <div class="card-user-stats d-flex justify-content-between">
-      <div class="m-2 number-teams">
-        <div class="d-flex justify-content-center nummber">
-          <p><%= user.teams.nil? ? 0 : user.teams.count %></p>
+<% if current_user != user %>
+  <div class="card col-6" data-controller="update-followers" data-update-followers-target="card">
+    <a href="/users/<%= user.id %>">
+      <div class="card-avatar d-flex justify-content-center">
+        <img src="https://i.pinimg.com/originals/6b/73/f5/6b73f582d6ba44e65ddea1ed0a073bc6.png" class="card-user-photo" alt="avatar">
+      </div>
+      <div class="card-username d-flex justify-content-center">
+        <h5 class="underline"><%= user.username.nil? ? "-" : user.username %></h5>
+      </div>
+      <div class="card-user-stats d-flex justify-content-between">
+        <div class="m-2 number-teams">
+          <div class="d-flex justify-content-center nummber">
+            <p><%= user.teams.nil? ? 0 : user.teams.count %></p>
+          </div>
+          <div class="d-flex justify-content-center">
+            <%= user.teams.count != 1 ? "Teams" : "Team" %>
+          </div>
         </div>
-        <div class="d-flex justify-content-center">
-          <%= user.teams.count != 1 ? "Teams" : "Team" %>
+        <div class="m-2 number-teams">
+          <div class="d-flex justify-content-center nummber">
+            <p><%= user.followeds_as_followed.nil? ? 0 : user.followeds_as_followed.count %></p>
+          </div>
+          <div class="d-flex justify-content-center">
+            <%= user.followeds_as_followed != 1 ? "Followers" : "Follower" %>
+          </div>
         </div>
       </div>
-      <div class="m-2 number-teams">
-        <div class="d-flex justify-content-center nummber">
-          <p><%= user.followers_as_follower.nil? ? 0 : user.followers_as_follower.count %></p>
-        </div>
-        <div class="d-flex justify-content-center">
-          <%= user.followeds_as_followed != 1 ? "Followers" : "Follower" %>
-        </div>
-      </div>
+    </a>
+    <div class="card-button" >
+      <form action="/follower/<%= user.id %>" data-action="submit->update-followers#updateFollowers" data-update-followers-target="form" class="favorite <%= "add" if !user.followeds_as_followed.detect { |hash| hash[:follower_id] == current_user.id } %>">
+        <input type="submit" value="<%= !user.followeds_as_followed.detect { |hash| hash[:follower_id] == current_user.id } ? "Follow" : "Unfollow" %>" class="form-favorites-input">
+      </form>
     </div>
-  </a>
-  <div class="card-button" >
-    <form action="/follower/<%= user.id %>" data-action="submit->update-followers#updateFollowers" data-update-followers-target="form" class="favorite add">
-      <input type="submit" value="Follow" class="form-favorites-input">
-    </form>
   </div>
-</div>
+<% end %>
