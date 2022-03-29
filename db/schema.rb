@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_25_141450) do
+ActiveRecord::Schema.define(version: 2022_03_29_184952) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,11 +24,47 @@ ActiveRecord::Schema.define(version: 2022_03_25_141450) do
     t.index ["team_id"], name: "index_battles_on_team_id"
   end
 
+  create_table "cumulative_earnings", force: :cascade do |t|
+    t.bigint "team_id", null: false
+    t.integer "total_slp"
+    t.date "date"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["team_id"], name: "index_cumulative_earnings_on_team_id"
+  end
+
   create_table "currencies", force: :cascade do |t|
     t.string "name"
     t.float "price"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "daily_earnings", force: :cascade do |t|
+    t.bigint "team_id", null: false
+    t.integer "daily_slp"
+    t.date "date"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["team_id"], name: "index_daily_earnings_on_team_id"
+  end
+
+  create_table "daily_levels", force: :cascade do |t|
+    t.bigint "team_id", null: false
+    t.integer "mmr"
+    t.date "date"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["team_id"], name: "index_daily_levels_on_team_id"
+  end
+
+  create_table "daily_rankings", force: :cascade do |t|
+    t.bigint "team_id", null: false
+    t.integer "rank"
+    t.date "date"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["team_id"], name: "index_daily_rankings_on_team_id"
   end
 
   create_table "followers", force: :cascade do |t|
@@ -107,6 +143,10 @@ ActiveRecord::Schema.define(version: 2022_03_25_141450) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "cumulative_earnings", "teams"
+  add_foreign_key "daily_earnings", "teams"
+  add_foreign_key "daily_levels", "teams"
+  add_foreign_key "daily_rankings", "teams"
   add_foreign_key "followers", "users", column: "followed_id"
   add_foreign_key "followers", "users", column: "follower_id"
   add_foreign_key "pets", "teams"

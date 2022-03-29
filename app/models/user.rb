@@ -11,5 +11,7 @@ class User < ApplicationRecord
 
   validates :username, presence: true
   validates :username, uniqueness: true
+  validates :username, length: { maximum: 13,
+    too_long: "max 23 characters" }
 
 end

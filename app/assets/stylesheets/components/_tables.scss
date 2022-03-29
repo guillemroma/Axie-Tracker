@@ -5,7 +5,7 @@
   border-color: #21B6A8;
   border-radius: 5px;
   border-width: 0.05ch;
-  background-color: rgb(255, 248, 248);
+  background-color: transparent;
 }
 
 .table-input {
@@ -117,4 +117,11 @@
 .stuck-prices {
   position: fixed;
   width: 100%;
+}
+
+.scholar-table-row {
+  a {
+    text-decoration: none;
+    color: #49423F;
+  }
 }

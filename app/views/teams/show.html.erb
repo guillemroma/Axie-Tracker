@@ -1,0 +1,28 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <div class="chart-header d-flex justify-content-center">
+        <p> Daily SLP trend </p>
+      </div>
+      <div class="card-body chart-slp">
+        <canvas id="SLP-Chart" width="400" height="400" data-labels="<%= @dates.to_json %>" data-data="<%= @daily_slps.to_json %>"></canvas>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="chart-header d-flex justify-content-center">
+        <p> MMR trend </p>
+      </div>
+      <div class="card-body">
+        <canvas id="SLP-Chart" width="400" height="400" data-labels="<%= @dates.to_json %>" data-data="<%= @daily_slps.to_json %>"></canvas>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="chart-header d-flex justify-content-center">
+        <p> Rank trend </p>
+      </div>
+      <div class="card-body">
+        <canvas id="SLP-Chart" width="400" height="400" data-labels="<%= @dates.to_json %>" data-data="<%= @daily_slps.to_json %>"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
