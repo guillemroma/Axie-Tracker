@@ -11,48 +11,56 @@ class TeamsController < ApplicationController
 
     @team = Team.find(params[:id])
 
-    CumulativeEarning.create(team_id: @team.id, total_slp: @team.current_slp, date: (Date.today))
-    CumulativeEarning.create(team_id: @team.id, total_slp: 150, date: (Date.today - 1))
-    CumulativeEarning.create(team_id: @team.id, total_slp: 100, date: (Date.today - 2))
-    CumulativeEarning.create(team_id: @team.id, total_slp: 80, date: (Date.today - 3))
-    CumulativeEarning.create(team_id: @team.id, total_slp: 60, date: (Date.today - 4))
-    CumulativeEarning.create(team_id: @team.id, total_slp: 20, date: (Date.today - 5))
+    date = Date.today
+    until (date == Date.today - 15) do
+      CumulativeEarning.create(team_id: @team.id, total_slp: Random.rand(50..200), date: date)
+      date -= 1
+    end
 
-    DailyEarning.create(
-      team_id: @team.id,
-      daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", @team.id, Date.today)[0].total_slp - CumulativeEarning.where("team_id = ? AND date = ?", @team.id, (Date.today - 1))[0].total_slp),
-      date: Date.today
-    )
+    date_1 = Date.today
+    date_2 = (Date.today - 1)
+    until (date_2 == Date.today - 15)
+      DailyEarning.create(
+        team_id: @team.id,
+        daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", @team.id, date_1)[0].total_slp - CumulativeEarning.where("team_id = ? AND date = ?", @team.id, date_2)[0].total_slp),
+        date: date_1
+      )
+      date_1 -= 1
+      date_2 -= 1
+    end
 
-    DailyEarning.create(
-      team_id: @team.id,
-      daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", @team.id, (Date.today - 1))[0].total_slp - CumulativeEarning.where("team_id = ? AND date = ?", @team.id, (Date.today - 2))[0].total_slp),
-      date: (Date.today - 1)
-    )
+    date = Date.today
+    until (date == Date.today - 15) do
+      DailyLevel.create(team_id: @team.id, mmr: Random.rand(1000..2000), date: date)
+      date -= 1
+    end
 
-    DailyEarning.create(
-      team_id: @team.id,
-      daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", @team.id, (Date.today - 2))[0].total_slp - CumulativeEarning.where("team_id = ? AND date = ?", @team.id, (Date.today - 3))[0].total_slp),
-      date: (Date.today - 2)
-    )
+    date = Date.today
+    until (date == Date.today - 15) do
+      DailyRanking.create(team_id: @team.id, rank: Random.rand(200000..1000000), date: date)
+      date -= 1
+    end
 
-    DailyEarning.create(
-      team_id: @team.id,
-      daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", @team.id, (Date.today - 3))[0].total_slp - CumulativeEarning.where("team_id = ? AND date = ?", @team.id, (Date.today - 4))[0].total_slp),
-      date: (Date.today - 3)
-    )
 
-    DailyEarning.create(
-      team_id: @team.id,
-      daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", @team.id, (Date.today - 4))[0].total_slp - CumulativeEarning.where("team_id = ? AND date = ?", @team.id, (Date.today - 5))[0].total_slp),
-      date: (Date.today - 4)
-    )
-
-    @daily_slps = []
-    @dates = []
+    @daily_slp = []
+    @dates_slp = []
     DailyEarning.where(team_id: @team.id).each do |daily_earning|
-      @daily_slps << daily_earning.daily_slp
-      @dates << daily_earning.date
+      @daily_slp << daily_earning.daily_slp
+      @dates_slp << daily_earning.date
+    end
+
+    @daily_mmr = []
+    @dates_mmr = []
+    DailyLevel.where(team_id: @team.id).each do |daily_mmr|
+      @daily_mmr << daily_mmr.mmr
+      @dates_mmr << daily_mmr.date
+    end
+
+    @daily_rank = []
+    @dates_rank = []
+    DailyRanking.where(team_id: @team.id).each do |daily_rank|
+      @daily_rank << daily_rank.rank
+      @dates_rank << daily_rank.date
     end
 
   end
@@ -107,6 +115,18 @@ class TeamsController < ApplicationController
     DailyEarning.create!(
       team_id: @team.id,
       daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", @team.id, Date.today)[0].total_slp),
+      date: Date.today
+    )
+
+    DailyLevel.create!(
+      team_id: @team.id,
+      mmr: @team.mmr,
+      date: Date.today
+    )
+
+    DailyRanking.create!(
+      team_id: @team.id,
+      rank: @team.rank,
       date: Date.today
     )
 
@@ -232,8 +252,8 @@ class TeamsController < ApplicationController
         daily_total_slp.save
       end
     else
-    #if the above conditions are not met, instead of update we will have to create the record
-    #in order to do so, we follow the same logic (checking if there is any record of cumulative earning from yesterday)
+      #if the above conditions are not met, instead of update we will have to create the record
+      #in order to do so, we follow the same logic (checking if there is any record of cumulative earning from yesterday)
       if CumulativeEarning.all.detect { |hash| hash[:date] == (Date.today - 1) }
         DailyEarning.create!(
           team_id: team.id,
@@ -248,5 +268,14 @@ class TeamsController < ApplicationController
         )
       end
     end
+
+    daily_mmr = DailyLevel.where("team_id = ? AND date = ?", team.id, Date.today)[0]
+    daily_mmr.update(mmr: team.mmr)
+    daily_mmr.save
+
+    daily_rank = DailyRanking.where("team_id = ? AND date = ?", team.id, Date.today)[0]
+    daily_rank.update(rank: team.rank)
+    daily_rank.save
+
   end
 end
