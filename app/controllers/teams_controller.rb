@@ -63,6 +63,9 @@ class TeamsController < ApplicationController
       @dates_rank << daily_rank.date
     end
 
+    @result = [(@team.win_rate * 100).to_i, ((1 - @team.win_rate) * 100).to_i]
+    @labels = ["Won", "Lost or Drawn"]
+
   end
 
   def create
@@ -107,6 +110,7 @@ class TeamsController < ApplicationController
     AXIEAPI.add_battles(@address)["battles"].each do |battle|
       battle_id = battle["battle_uuid"]
       result = battle["winner"] == @address ? "won" : "lost"
+      raise
       Battle.create(team_id: @user_team.id, result: result, battle_uuid: battle_id)
     end
 
@@ -237,10 +241,19 @@ class TeamsController < ApplicationController
     record_total_slp.update(total_slp: team.total_slp)
     record_total_slp.save
 
-    #update the daily earnings table by first: checking if there is a cumulative record from yesterday to perform a substraction
+    #update the daily earnings table by:
+    #first: select and destroy records that do not pass the 15 days validation criteria
+    cumulative_earning_date_old = CumulativeEarning.where("date < ?",  Date.today - 15)
+    daily_earning_date_old = DailyEarning.where("date < ?",  Date.today - 15)
+
+    cumulative_earning_date_old.destroy_all
+    daily_earning_date_old.destroy_all
+
+    #second: checking if there is a cumulative record from yesterday to perform a substraction
     #and later: if that is the case, check if there is any record with date today of daily earning
     #if both conditions are met, just update the record with the new difference of total_slp (if any)
     #else, we just update today's daily_slp from daily earnings with today's total_slp from cumulative earning
+
     if DailyEarning.all.detect { |hash| hash[:date] == (Date.today) }
       if CumulativeEarning.all.detect { |hash| hash[:date] == (Date.today - 1) }
         daily_total_slp = DailyEarning.where("team_id = ? AND date = ?", team.id, Date.today)[0]
