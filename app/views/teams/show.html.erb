@@ -1,6 +1,15 @@
 <div class="container">
   <div class="back-to-users">
-    <a href="/users/<%= @team.user_id %>"><< Back to <%= @team.user.username %>'s profile</a>
+    <div class="d-flex justify-content-start go-back-button">
+      <a href="/users/<%= @team.user_id %>">
+        <div class="d-flex justify-content-start">
+          <div class="ms-1 me-1">
+            << Back to
+          </div>
+          <p class="underline">Manager</p>
+        </div>
+      </a>
+    </div>
   </div>
   <div class="row">
     <div class="col-12 mb-5">
@@ -25,6 +34,22 @@
       </div>
       <div class="card-body">
         <canvas id="Ranking-Chart" width="400" height="400" data-labels="<%= @dates_rank.to_json %>" data-data="<%= @daily_rank.to_json %>"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="chart-header d-flex justify-content-center">
+        <p> Win Rate </p>
+      </div>
+      <div class="card-body">
+        <canvas id="Win-rate-Chart" width="400" height="400" data-labels="<%= @labels.to_json %>" data-data="<%= @result.to_json %>"></canvas>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card">
+        Hola
       </div>
     </div>
   </div>
