@@ -78,7 +78,7 @@ class UsersController < ApplicationController
     @user.teams.each do |team|
       @current_slp += team.current_slp if !team.current_slp.nil?
       @mmr << team.mmr
-      team.battles.each do |battle|
+      Battle.where(ronin_address: team.ronin_address).each do |battle|
         battle.result == "won" ? ((@battles += 1) && (@wins += 1)) : (@battles += 1)
       end
     end

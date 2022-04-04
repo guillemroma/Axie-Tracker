@@ -1,0 +1,41 @@
+<div class="col-4 mr-7 mb-4">
+  <div class="d-flex justify-content-start">
+    <div class="battle-card d-flex">
+      <div class="battle-count-circle ">
+        <% if battle.result == "won" %>
+          <div class="won d-flex justify-content-center">
+            <div>
+              <p><strong><%= "W" %></strong></p>
+            </div>
+          </div>
+        <% else %>
+          <div class="lost d-flex justify-content-center">
+            <div>
+              <p><strong><%= "L" %></strong></p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <div class="battle-card-metrics d-flex justify-content-center w-100">
+        <div class="battle-count-results">
+          <div class="mmr d-flex justify-content-center">
+            <p><strong>MMR</strong></p>
+          </div>
+          <div>
+            <div class="d-flex">
+              <%= number_with_delimiter(battle.new_mmr, :delimiter => ',') %>
+            </div>
+          </div>
+        </div>
+        <div class="battle-count-results">
+          <div class="points d-flex justify-content-center">
+            <p><strong>Points</strong></p>
+          </div>
+          <div class="d-flex">
+            <%= ((battle.new_mmr - battle.old_mmr) < 0) ? "#{(battle.new_mmr - battle.old_mmr).to_s.gsub!("-","")} 💀" : "#{(battle.new_mmr - battle.old_mmr)} 🔥"%>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

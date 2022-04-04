@@ -7,7 +7,9 @@
         </div>
       </div>
       <div class="table-input-ranking-2 d-flex align-items-center justify-content-center m-0">
-        <%= team[:scholar_name] == "" ? "-" : team[:scholar_name] %>
+        <a href="/ranking/teams/<%= team.ronin_address %>">
+          <%= team[:scholar_name] == "" ? "-" : team[:scholar_name] %>
+        </a>
       </div>
       <div class="table-input-ranking-2 d-flex align-items-center justify-content-center m-0">
         <%= number_with_delimiter(team[:mmr], :delimiter => ',') %>

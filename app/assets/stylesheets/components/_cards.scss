@@ -210,3 +210,66 @@
   display: grid;
   grid-template-columns: 2fr 2fr 2fr 2fr 2fr;
 }
+
+.battle-count-circle {
+
+  .lost {
+    color: white;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    background-color: #BBBBBB;
+
+    div {
+      margin: auto;
+      p {
+        margin: 0  !important;
+      }
+    }
+  }
+  .won {
+    color: white;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    background-color: #21B6A8;
+
+    div {
+      margin: auto;
+
+      p {
+        margin: 0 !important;
+      }
+    }
+  }
+}
+
+.points {
+  p {
+    margin: 0 !important;
+    color: #21B6A8;
+  }
+
+}
+
+.mmr {
+  p {
+    margin: 0 !important;
+    color: #21B6A8;
+  }
+}
+
+.battle-count-results {
+  margin: auto;
+}
+
+.battle-card {
+  width: 100%;
+}
+
+.battle-card-metrics {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-bottom-right-radius: 10px;
+  border-top-right-radius: 10px;
+  border-left: none;
+}
