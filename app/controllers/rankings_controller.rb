@@ -14,7 +14,8 @@ class RankingsController < ApplicationController
         Ranking.create(
           rank: team["rank"],
           scholar_name: team["name"],
-          mmr: team["elo"]
+          mmr: team["elo"],
+          ronin_address: team["client_id"]
         )
       @ranking = Ranking.all.paginate(:page => params[:page], :per_page => 15)
       end

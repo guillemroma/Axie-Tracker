@@ -27,9 +27,15 @@
       </div>
     </a>
     <div class="card-button" >
-      <form action="/follower/<%= user.id %>" data-action="submit->update-followers#updateFollowers" data-update-followers-target="form" class="favorite <%= "add" if !user.followeds_as_followed.detect { |hash| hash[:follower_id] == current_user.id } %>">
-        <input type="submit" value="<%= !user.followeds_as_followed.detect { |hash| hash[:follower_id] == current_user.id } ? "Follow" : "Unfollow" %>" class="form-favorites-input">
-      </form>
+      <% if current_user.nil? %>
+        <form action="/follower/<%= user.id %>" data-action="submit->update-followers#updateFollowers" data-update-followers-target="form" class="favorite add">
+          <input type="submit" value="Follow" class="form-favorites-input">
+        </form>
+      <% else %>
+        <form action="/follower/<%= user.id %>" data-action="submit->update-followers#updateFollowers" data-update-followers-target="form" class="favorite <%= "add" if !user.followeds_as_followed.detect { |hash| hash[:follower_id] == current_user.id } %>">
+          <input type="submit" value="<%= !user.followeds_as_followed.detect { |hash| hash[:follower_id] == current_user.id } ? "Follow" : "Unfollow" %>" class="form-favorites-input">
+        </form>
+      <% end %>
     </div>
   </div>
 <% end %>

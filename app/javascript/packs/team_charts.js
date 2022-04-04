@@ -2,12 +2,80 @@ import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const initChart = () => {
+
   document.addEventListener('turbolinks:load', () => {
     Chart.register(ChartDataLabels);
     Chart.defaults.font.size = 12;
     Chart.defaults.font.family = 'Montserrat';
     // Chart.canvas.parentNode.style.height = '128px';
     // Chart.canvas.parentNode.style.width = '128px';
+
+    const ctx4 = document.getElementById("Win-rate-Chart").getContext('2d');
+    const WinRateChart = new Chart(ctx4, {
+      type: 'doughnut',
+      data: {
+        labels: JSON.parse(ctx4.canvas.dataset.labels).reverse(),
+        datasets: [{
+          data: JSON.parse(ctx4.canvas.dataset.data).reverse(),
+          borderWidth: 1,
+          backgroundColor: ["#D0D0D0", "#21B6A8"],
+        }]
+      },
+      options: {
+        responsive: true,
+        borderDash: [10, 10],
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            display: false,
+            beginAtZero: true,
+            grace: '30%',
+            grid: {
+              display: false
+            }
+          },
+          x: {
+            display: false,
+            grid: {
+              display: false
+            },
+            font: {
+              color: 'red',
+              size: 6
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: false
+          },
+          datalabels: {
+            color: 'white',
+            font: {
+              family: 'Montserrat',
+              size: 16,
+              weight: 'bold'
+            },
+            formatter: function (value, context) {
+              return `${value} %`
+            }
+          }
+        },
+        elements: {
+          point: {
+            backgroundColor: '#21B6A8',
+            radius: 0.5
+          },
+          line: {
+            borderWidth: 1,
+            borderColor: '#21B6A8'
+          }
+        }
+      }
+    }
+    );
+
+    WinRateChart.resize(300, 300)
 
     const ctx = document.getElementById('SLP-Chart').getContext('2d');
     const SLPChart = new Chart(ctx, {
@@ -211,76 +279,6 @@ const initChart = () => {
     );
 
     RankingChart.resize(300, 300)
-
-    const ctx4 = document.getElementById("Win-rate-Chart").getContext('2d');
-    const WinRateChart = new Chart(ctx4, {
-      type: 'doughnut',
-      data: {
-        labels: JSON.parse(ctx4.canvas.dataset.labels),
-        datasets: [{
-          data: JSON.parse(ctx4.canvas.dataset.data),
-          borderWidth: 1,
-          backgroundColor: ["#21B6A8", "#D0D0D0"],
-        }]
-      },
-      options: {
-        responsive: true,
-        borderDash: [10, 10],
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            display: false,
-            beginAtZero: true,
-            grace: '30%',
-            grid: {
-              display: false
-            }
-          },
-          x: {
-            display: false,
-            grid: {
-              display: false
-            },
-            font: {
-              color: 'red',
-              size: 6
-            }
-          }
-        },
-        plugins: {
-          legend: {
-            display: false
-          },
-          datalabels: {
-            color: 'white',
-            font: {
-              family: 'Montserrat',
-              size: 16,
-              weight: 'bold'
-            },
-            formatter: function (value, context) {
-              return `${value} %`
-            }
-          }
-        },
-        elements: {
-          point: {
-            backgroundColor: '#21B6A8',
-            radius: 0.5
-          },
-          line: {
-            borderWidth: 1,
-            borderColor: '#21B6A8'
-          }
-        }
-      }
-    }
-    );
-
-    RankingChart.resize(300, 300)
-
-
-
   }
   )
 }
