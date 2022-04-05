@@ -1,9 +1,6 @@
 require_relative "boot"
 require "rails/all"
-require '../app/controllers/modules/add_axie.rb'
-require '../app/controllers/modules/exchange.rb'
-require '../app/controllers/modules/coin.rb'
-require '../app/controllers/modules/info.rb'
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)

@@ -1,10 +1,10 @@
 class TeamsController < ApplicationController
   skip_before_action :verify_authenticity_token
   skip_before_action :authenticate_user!, :raise => false
-  require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/add_axie.rb'
-  require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/exchange.rb'
-  require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/coin.rb'
-  require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/info.rb'
+  require_relative './modules/add_axie.rb'
+  require_relative './modules/exchange.rb'
+  require_relative './modules/coin.rb'
+  require_relative './modules/info.rb'
   require 'date'
 
   def show

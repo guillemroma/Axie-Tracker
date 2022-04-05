@@ -1,5 +1,5 @@
 class RankingsController < ApplicationController
-  require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/select_teams.rb'
+  require_relative './modules/select_teams.rb'
 
   def index
 
