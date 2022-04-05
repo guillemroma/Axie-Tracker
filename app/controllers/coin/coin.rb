@@ -1,8 +1,6 @@
 module Coin
   require 'coingecko_ruby'
 
-  Modules::Coin
-
   def Coin.add_btc
     client = CoingeckoRuby::Client.new
     @bitcoin_dolar_price = client.price('bitcoin')['bitcoin']['usd']

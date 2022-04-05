@@ -9,7 +9,6 @@ class RankingsController < ApplicationController
     if params[:query].present?
       @ranking = @ranking.where('scholar_name ILIKE ?', "%#{params[:query]}%").paginate(:page => params[:page], :per_page => 15)
     else
-      destroy
       @fetch_teams = SelectTeams.add
       @fetch_teams["items"].each do |team|
         Ranking.create(
