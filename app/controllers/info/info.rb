@@ -4,6 +4,8 @@ module Info
   require 'openssl'
   require 'json'
 
+  Info = 0
+
   def Info.present
     url = URI("https://cryptopanic.com/api/v1/posts/?auth_token=#{ENV["AUTH"]}&currencies=AXS,SLP")
 

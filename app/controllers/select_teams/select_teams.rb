@@ -4,6 +4,8 @@ module SelectTeams
   require 'openssl'
   require 'json'
 
+  SELECTTEAMS = 0
+
   def SelectTeams.add
 
     url = URI("https://game-api.axie.technology/toprank?offset=0&limit=50")
