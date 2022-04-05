@@ -1,10 +1,7 @@
 class TeamsController < ApplicationController
   skip_before_action :verify_authenticity_token
   skip_before_action :authenticate_user!, :raise => false
-  require_relative './modules/add_axie.rb'
-  require_relative './modules/exchange.rb'
-  require_relative './modules/coin.rb'
-  require_relative './modules/info.rb'
+
   require 'date'
 
   def show
@@ -107,7 +104,7 @@ class TeamsController < ApplicationController
         @labels = ["Won", "Lost or Drawn"]
       end
     end
-    
+
     DailyLevel.having("ronin_address = ? AND date <= ?", params[:ronin_address], Date.today - 3) ? @display_charts = true : @display_charts = false
 
   end

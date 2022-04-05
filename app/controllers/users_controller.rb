@@ -1,10 +1,5 @@
 class UsersController < ApplicationController
   skip_before_action :authenticate_user!, :raise => false
-  require_relative './modules/add_axie.rb'
-  require_relative './modules/exchange.rb'
-  require_relative './modules/coin.rb'
-  require_relative './modules/info.rb'
-
 
   def index
 

@@ -5,6 +5,8 @@ module AXIEAPI
   require 'json'
   require 'timeout'
 
+  Modules::AddAxie
+
   def AXIEAPI.add_axies(ronin_address)
 
     url = URI("https://axie-infinity.p.rapidapi.com/get-axies/#{ronin_address}")
