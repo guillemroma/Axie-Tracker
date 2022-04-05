@@ -1,9 +1,9 @@
 require_relative "boot"
 require "rails/all"
-require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/add_axie.rb'
-require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/exchange.rb'
-require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/coin.rb'
-require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/info.rb'
+require '../app/controllers/modules/add_axie.rb'
+require '../app/controllers/modules/exchange.rb'
+require '../app/controllers/modules/coin.rb'
+require '../app/controllers/modules/info.rb'
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
