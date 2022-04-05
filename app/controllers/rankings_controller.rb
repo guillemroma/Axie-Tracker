@@ -1,5 +1,4 @@
 class RankingsController < ApplicationController
-  require_relative './modules/select_teams.rb'
 
   def index
 
