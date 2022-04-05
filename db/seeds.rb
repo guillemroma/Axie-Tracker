@@ -6,10 +6,10 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/add_axie.rb'
-require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/exchange.rb'
-require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/coin.rb'
-require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/info.rb'
+require_relative '../app/controllers/modules/add_axie.rb'
+require_relative '../app/controllers/modules/exchange.rb'
+require_relative '../app/controllers/modules/coin.rb'
+require_relative '../app/controllers/modules/info.rb'
 
 User.destroy_all
 Battle.destroy_all

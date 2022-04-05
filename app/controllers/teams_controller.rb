@@ -107,7 +107,7 @@ class TeamsController < ApplicationController
         @labels = ["Won", "Lost or Drawn"]
       end
     end
-
+    
     DailyLevel.having("ronin_address = ? AND date <= ?", params[:ronin_address], Date.today - 3) ? @display_charts = true : @display_charts = false
 
   end

@@ -3,6 +3,7 @@ class RankingsController < ApplicationController
 
   def index
 
+    Ranking.destroy_all
     @ranking = Ranking.all
 
     if params[:query].present?
@@ -27,12 +28,6 @@ class RankingsController < ApplicationController
       format.html # Follow regular flow of Rails
       format.text { render partial: 'rankings/list_ranking', locals: { ranking: @ranking }, formats: [:html] }
     end
-
-  end
-
-  def destroy
-
-    Ranking.destroy_all
 
   end
 
