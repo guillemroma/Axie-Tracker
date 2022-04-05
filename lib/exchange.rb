@@ -4,8 +4,6 @@ module Exchange
   require 'openssl'
   require 'json'
 
-  Exchange = 0
-
   def Exchange.add(from,to)
 
     url = URI("https://api.exchangerate.host/convert?from=#{from}&to=#{to}")

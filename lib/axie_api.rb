@@ -5,7 +5,6 @@ module AXIEAPI
   require 'json'
   require 'timeout'
 
-  AXIEAPI = 0
 
   def AXIEAPI.add_axies(ronin_address)
 
