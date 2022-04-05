@@ -1,9 +1,9 @@
 class UsersController < ApplicationController
   skip_before_action :authenticate_user!, :raise => false
-  require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/add_axie.rb'
-  require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/exchange.rb'
-  require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/coin.rb'
-  require '/home/guillem/code/guillemroma/Axie_tracker/app/controllers/modules/info.rb'
+  require_relative './modules/add_axie.rb'
+  require_relative './modules/exchange.rb'
+  require_relative './modules/coin.rb'
+  require_relative './modules/info.rb'
 
 
   def index
