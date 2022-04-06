@@ -6,74 +6,39 @@ class TeamsController < ApplicationController
 
   def show
 
-    if params[:ronin_address].present?
+    axi_api = AxieApi.new
+    @team = Team.find(params[:id])
+    @battles = Battle.where(ronin_address: @team.ronin_address).paginate(:page => params[:page], :per_page => 15)
 
-      Battle.where(ronin_address: params[:ronin_address]).destroy_all
-
-      unless AXIEAPI.add_battles(params[:ronin_address]).nil?
-        AXIEAPI.add_battles(params[:ronin_address])["battles"].each do |battle|
-
-
-          battle_id = battle["battle_uuid"]
-          result = battle["winner"] == params[:ronin_address] ? "won" : "lost"
-
-          new_mmr = 0
-          old_mmr = 0
-
-          battle["eloAndItem"].each do |player|
-            if player["player_id"] == params[:ronin_address]
-              new_mmr = player["new_elo"]
-              old_mmr = player["old_elo"]
-            end
-          end
-
-          Battle.create(
-            result: result,
-            battle_uuid: battle_id,
-            ronin_address: params[:ronin_address],
-            new_mmr: new_mmr,
-            old_mmr: old_mmr
-          )
-        end
-      end
-
-      @battles = Battle.where(ronin_address: params[:ronin_address]).paginate(:page => params[:page], :per_page => 15)
-
-    else
-
-      @team = Team.find(params[:id])
-      @battles = Battle.where(ronin_address: @team.ronin_address).paginate(:page => params[:page], :per_page => 15)
-
-      unless AXIEAPI.add_axies(@team.ronin_address).nil?
-        AXIEAPI.add_axies(@team.ronin_address)["data"]["axies"]["results"].each do |axie|
-          @axie_genes = AXIEAPI.add_genes_to_axie(axie["id"].to_i)
-          Pet.create(
-            team_id: @user_team.id,
-            image: axie["image"],
-            axie_game_id: (@axie_genes.nil? ? 0 : @axie_genes["story_id"]),
-            name: (@axie_genes.nil? ? "-" : @axie_genes["name"]),
-            hp: (@axie_genes.nil? ? 0 : @axie_genes["stats"]["hp"]),
-            morale: (@axie_genes.nil? ? 0 : @axie_genes["stats"]["morale"]),
-            speed: (@axie_genes.nil? ? 0 : @axie_genes["stats"]["speed"]),
-            skill: (@axie_genes.nil? ? 0 : @axie_genes["stats"]["skill"]),
-            axie_class: (@axie_genes.nil? ? "-" : @axie_genes["class"]),
-            eyes: (@axie_genes.nil? ? "-" : @axie_genes["parts"][0]["name"]),
-            ears: (@axie_genes.nil? ? "-" : @axie_genes["parts"][1]["name"]),
-            back: (@axie_genes.nil? ? "-" : @axie_genes["parts"][2]["name"]),
-            mouth: (@axie_genes.nil? ? "-" : @axie_genes["parts"][3]["name"]),
-            horn: (@axie_genes.nil? ? "-" : @axie_genes["parts"][4]["name"]),
-            tail: (@axie_genes.nil? ? "-" : @axie_genes["parts"][5]["name"])
-          )
-        end
+    unless axi_api.add_axies(@team.ronin_address).nil?
+      axi_api.add_axies(@team.ronin_address)["data"]["axies"]["results"].each do |axie|
+        @axie_genes = axi_api.add_genes_to_axie(axie["id"].to_i)
+        Pet.create(
+          team_id: @user_team.id,
+          image: axie["image"],
+          axie_game_id: (@axie_genes.nil? ? 0 : @axie_genes["story_id"]),
+          name: (@axie_genes.nil? ? "-" : @axie_genes["name"]),
+          hp: (@axie_genes.nil? ? 0 : @axie_genes["stats"]["hp"]),
+          morale: (@axie_genes.nil? ? 0 : @axie_genes["stats"]["morale"]),
+          speed: (@axie_genes.nil? ? 0 : @axie_genes["stats"]["speed"]),
+          skill: (@axie_genes.nil? ? 0 : @axie_genes["stats"]["skill"]),
+          axie_class: (@axie_genes.nil? ? "-" : @axie_genes["class"]),
+          eyes: (@axie_genes.nil? ? "-" : @axie_genes["parts"][0]["name"]),
+          ears: (@axie_genes.nil? ? "-" : @axie_genes["parts"][1]["name"]),
+          back: (@axie_genes.nil? ? "-" : @axie_genes["parts"][2]["name"]),
+          mouth: (@axie_genes.nil? ? "-" : @axie_genes["parts"][3]["name"]),
+          horn: (@axie_genes.nil? ? "-" : @axie_genes["parts"][4]["name"]),
+          tail: (@axie_genes.nil? ? "-" : @axie_genes["parts"][5]["name"])
+        )
       end
     end
 
-    params[:ronin_address] ? (ronin_address = params[:ronin_address]) : (ronin_address = @team.ronin_address)
+    ronin_address = @team.ronin_address
 
     @daily_slp = []
     @dates_slp = []
 
-    DailyEarning.where(ronin_address: (ronin_address)).each do |daily_earning|
+    DailyEarning.where(ronin_address: ronin_address).each do |daily_earning|
       @daily_slp << daily_earning.daily_slp
       @dates_slp << daily_earning.date
     end
@@ -92,20 +57,12 @@ class TeamsController < ApplicationController
       @dates_rank << daily_rank.date
     end
 
-
-    if params[:ronin_address]
-      @result = [(AXIEAPI.check_win_rate_ranking(params[:ronin_address]) * 100).to_i, ((1 - AXIEAPI.check_win_rate_ranking(params[:ronin_address])) * 100).to_i]
+    if (@team.win_rate.present? && !@team.win_rate.nan?)
+      @result = [(@team.win_rate * 100).to_i, ((1 - @team.win_rate) * 100).to_i]
       @labels = ["Won", "Lost or Drawn"]
-      @ranking = true
-
-    else
-      if (@team.win_rate.present? && !@team.win_rate.nan?)
-        @result = [(@team.win_rate * 100).to_i, ((1 - @team.win_rate) * 100).to_i]
-        @labels = ["Won", "Lost or Drawn"]
-      end
     end
 
-    DailyLevel.having("ronin_address = ? AND date <= ?", params[:ronin_address], Date.today - 3) ? @display_charts = true : @display_charts = false
+    (@display_charts = true) if (DailyEarning.having("date < ? ", Date.today - 3))
 
   end
 
@@ -114,50 +71,63 @@ class TeamsController < ApplicationController
     @user = User.find(params["team"]["user_id"].to_i)
     @address = params["team"]["ronin_address"].gsub!("ronin:", "0x")
 
+    axi_api = AxieApi.new
+    team_metrics = axi_api.add_metrics(@address)
+
     @user_team = Team.create(
       user_id: current_user.id,
       ronin_address: @address,
-      mmr: (AXIEAPI.add_metrics(@address).nil? ? 0 : AXIEAPI.add_metrics(@address)["mmr"]),
-      rank: (AXIEAPI.add_metrics(@address).nil? ? 0 : AXIEAPI.add_metrics(@address)["rank"]),
-      current_slp: (AXIEAPI.add_metrics(@address).nil? ? 0 : AXIEAPI.add_metrics(@address)["total_slp"]),
-      total_slp: (AXIEAPI.add_metrics(@address).nil? ? 0 : AXIEAPI.add_metrics(@address)["raw_total"]),
-      last_claim: (AXIEAPI.add_metrics(@address).nil? ? 0 : AXIEAPI.add_metrics(@address)["last_claim"]),
-      next_claim: (AXIEAPI.add_metrics(@address).nil? ? 0 : AXIEAPI.add_metrics(@address)["next_claim"]),
+      mmr: (team_metrics.nil? ? 0 : team_metrics["mmr"]),
+      rank: (team_metrics.nil? ? 0 : team_metrics["rank"]),
+      current_slp: (team_metrics.nil? ? 0 : team_metrics["total_slp"]),
+      total_slp: (team_metrics.nil? ? 0 : team_metrics["raw_total"]),
+      last_claim: (team_metrics.nil? ? 0 : team_metrics["last_claim"]),
+      next_claim: (team_metrics.nil? ? 0 : team_metrics["next_claim"]),
       scholar_name: params["team"]["scholar_name"]
       )
 
-    unless AXIEAPI.add_battles(@user_team.ronin_address).nil?
-      AXIEAPI.add_battles(@user_team.ronin_address)["battles"].each do |battle|
-        battle_id = battle["battle_uuid"]
-        result = battle["winner"] == @user_team.ronin_address ? "won" : "lost"
+    battles = axi_api.add_battles(@address)
+    battles_hash_elo = {}
 
-        new_mmr = 0
-        old_mmr = 0
+    unless battles.nil?
+      battles["battles"].each do |battle|
+      battle_id = battle["battle_uuid"]
+      battle["winner"] == @address ? result = "won" : result = "lost"
+      battles_hash_elo[battle_id] = battle["eloAndItem"]
 
-        battle["eloAndItem"].each do |player|
-          if player["player_id"] == @user_team.ronin_address
-            new_mmr = player["new_elo"]
-            old_mmr = player["old_elo"]
-          end
-        end
-
-        Battle.create(
-          result: result,
-          battle_uuid: battle_id,
-          ronin_address: @user_team.ronin_address,
-          new_mmr: new_mmr,
-          old_mmr: old_mmr
-        )
+      Battle.create(
+        result: result,
+        battle_uuid: battle_id,
+        ronin_address: @address
+      )
       end
     end
 
-    unless AXIEAPI.add_metrics(@user_team.ronin_address).nil?
-      DailyEarning.create(daily_slp: AXIEAPI.add_metrics(@user_team.ronin_address)["total_slp"], date: Date.today, ronin_address: @user_team.ronin_address)
-      DailyLevel.create(mmr: AXIEAPI.add_metrics(@user_team.ronin_address)["mmr"], date: Date.today, ronin_address: @user_team.ronin_address)
-      DailyRanking.create(rank: AXIEAPI.add_metrics(@user_team.ronin_address)["rank"], date: Date.today, ronin_address: @user_team.ronin_address)
+    Battle.where(ronin_address: @address).each do |battle|
+
+      @new_mmr = 0
+      @old_mmr = 0
+
+      battles_hash_elo[battle[:battle_uuid]].each do |player|
+        if player["player_id"] == battle[:ronin_address]
+          @new_mmr = player["new_elo"]
+          @old_mmr = player["old_elo"]
+        end
+      end
+      battle[:new_mmr] = @new_mmr
+      battle[:old_mmr] = @old_mmr
+      battle.save
+
     end
 
-    (@user_team.win_rate = AXIEAPI.check_win_rate(@user_team)) if !AXIEAPI.check_win_rate(@user_team).nil?
+
+    unless team_metrics.nil?
+      DailyEarning.create(daily_slp: team_metrics["total_slp"], date: Date.today, ronin_address: @user_team.ronin_address)
+      DailyLevel.create(mmr: team_metrics["mmr"], date: Date.today, ronin_address: @user_team.ronin_address)
+      DailyRanking.create(rank: team_metrics["rank"], date: Date.today, ronin_address: @user_team.ronin_address)
+    end
+
+    (@user_team.win_rate = axi_api.check_win_rate(@user_team)) if !axi_api.check_win_rate(@user_team).nil?
     @user_team.save
 
     redirect_to "/users/#{@user.id}"

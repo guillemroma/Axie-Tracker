@@ -1,30 +1,19 @@
 <div class="container">
   <div class="back-to-users mb-3">
     <div class="d-flex justify-content-start go-back-button">
-      <% if @ranking %>
-        <a href="/ranking">
-          <div class="d-flex justify-content-start">
-            <div class="ms-1 me-1">
-              << Back to
-            </div>
-            <p class="underline">Ranking</p>
+      <a href="/users/<%= @team.user_id %>">
+        <div class="d-flex justify-content-start">
+          <div class="ms-1 me-1">
+            << Back to
           </div>
-        </a>
-      <% else %>
-        <a href="/users/<%= @team.user_id %>">
-          <div class="d-flex justify-content-start">
-            <div class="ms-1 me-1">
-              << Back to
-            </div>
-            <p class="underline">Manager</p>
-          </div>
-        </a>
-      <% end %>
+          <p class="underline">Manager</p>
+        </div>
+      </a>
     </div>
   </div>
-  <% if @ranking %>
+  <% if @team.win_rate.present? && !@team.win_rate.nan?%>
     <div class="row">
-      <div class="col-5 mt-5">
+      <div class="col-5">
         <div class="chart-header d-flex justify-content-center">
           <p> Win Rate </p>
         </div>
@@ -54,83 +43,49 @@
         </div>
       </div>
     </div>
-  <% else %>
-    <% if @team.win_rate.present? && !@team.win_rate.nan?%>
-      <div class="row">
-        <div class="col-5">
-          <div class="chart-header d-flex justify-content-center">
-            <p> Win Rate </p>
-          </div>
-          <div class="card-body">
-            <canvas id="Win-rate-Chart" width="400" height="400" data-labels="<%= @labels.to_json %>" data-data="<%= @result.to_json %>"></canvas>
-          </div>
-        </div>
-        <div class="col-7">
-          <div class="chart-header d-flex justify-content-center">
-            <p> Battle history </p>
-          </div>
-          <div class="card-body mt-1">
-            <div class="row">
-              <% @battles.each_with_index do |battle, index| %>
-                <%= render 'battle_card', battle: battle, index: index, battles: @battles.count %>
-              <% end %>
-            </div>
-            <div class='pagination-row'>
-              <div class='padding-zero d-flex justify-content-center'>
-                <ul class='pagination'>
-                  <li class='disabled'>
-                    <%= will_paginate(@battles,:previous_label => '&laquo;', :next_label => '&raquo;',:class=>'small-font',:outer_window => 1,:inner_window => 0) %>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    <% end %>
-    <div class="row">
-      <div class="col-12 mb-5 mt-5">
-        <div class="chart-header d-flex justify-content-center">
-          <p> Daily SLP trend </p>
-        </div>
-        <% if @display_charts %>
-          <div class="card-body chart-slp">
-            <canvas id="SLP-Chart" width="400" height="400" data-labels="<%= @dates_slp.to_json %>" data-data="<%= @daily_slp.to_json %>"></canvas>
-          </div>
-        <% else %>
-          <div class="mt-3 d-flex justify-content-center notice">
-            <em>chart unavailable, needs at least 3 days of data</em>
-          </div>
-        <% end %>
-      </div>
-      <div class="col-12 mb-5">
-        <div class="chart-header d-flex justify-content-center">
-          <p> MMR trend </p>
-        </div>
-        <% if @display_charts %>
-          <div class="card-body">
-            <canvas id="MMR-Chart" width="400" height="400" data-labels="<%= @dates_mmr.to_json %>" data-data="<%= @daily_mmr.to_json %>"></canvas>
-          </div>
-        <% else %>
-          <div class="mt-3 d-flex justify-content-center notice">
-            <em>chart unavailable, needs at least 3 days of data</em>
-          </div>
-        <% end %>
-      </div>
-      <div class="col-12 mb-5">
-        <div class="chart-header d-flex justify-content-center">
-          <p> Rank trend </p>
-        </div>
-        <% if @display_charts %>
-          <div class="card-body">
-            <canvas id="Ranking-Chart" width="400" height="400" data-labels="<%= @dates_rank.to_json %>" data-data="<%= @daily_rank.to_json %>"></canvas>
-          </div>
-        <% else %>
-          <div class="mt-3 d-flex justify-content-center notice">
-            <em>chart unavailable, needs at least 3 days of data</em>
-          </div>
-        <% end %>
-      </div>
-    </div>
   <% end %>
+  <div class="row">
+    <div class="col-12 mb-5 mt-5">
+      <div class="chart-header d-flex justify-content-center">
+        <p> Daily SLP trend </p>
+      </div>
+      <% if @display_charts %>
+        <div class="card-body chart-slp">
+          <canvas id="SLP-Chart" width="400" height="400" data-labels="<%= @dates_slp.to_json %>" data-data="<%= @daily_slp.to_json %>"></canvas>
+        </div>
+      <% else %>
+        <div class="mt-3 d-flex justify-content-center notice">
+          <em>chart unavailable, needs at least 3 days of data</em>
+        </div>
+      <% end %>
+    </div>
+    <div class="col-12 mb-5">
+      <div class="chart-header d-flex justify-content-center">
+        <p> MMR trend </p>
+      </div>
+      <% if @display_charts %>
+        <div class="card-body">
+          <canvas id="MMR-Chart" width="400" height="400" data-labels="<%= @dates_mmr.to_json %>" data-data="<%= @daily_mmr.to_json %>"></canvas>
+        </div>
+      <% else %>
+        <div class="mt-3 d-flex justify-content-center notice">
+          <em>chart unavailable, needs at least 3 days of data</em>
+        </div>
+      <% end %>
+    </div>
+    <div class="col-12 mb-5">
+      <div class="chart-header d-flex justify-content-center">
+        <p> Rank trend </p>
+      </div>
+      <% if @display_charts %>
+        <div class="card-body">
+          <canvas id="Ranking-Chart" width="400" height="400" data-labels="<%= @dates_rank.to_json %>" data-data="<%= @daily_rank.to_json %>"></canvas>
+        </div>
+      <% else %>
+        <div class="mt-3 d-flex justify-content-center notice">
+          <em>chart unavailable, needs at least 3 days of data</em>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>

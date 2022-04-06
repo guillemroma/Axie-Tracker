@@ -6,12 +6,6 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-require_relative "../app/axie_api.rb"
-require_relative "../app/coin.rb"
-require_relative "../app/exchange.rb"
-require_relative "../app/info.rb"
-require_relative "../app/select_teams.rb"
-
 User.destroy_all
 Battle.destroy_all
 DailyEarning.destroy_all
@@ -19,6 +13,9 @@ DailyLevel.destroy_all
 DailyRanking.destroy_all
 Follower.destroy_all
 Currency.destroy_all
+Ranking.destroy_all
+Tweet.destroy_all
+
 
 puts "DB cleaned!"
 # user = User.create!(email: "dummy@gmail.com", password: "123456", first_name: "Dummy", last_name: "2.0", user_name: "I_am_a_Dummy")
@@ -45,36 +42,19 @@ end
 
 puts "#{User.count} users were created"
 
-address_1 = "ronin:805d40d62c9d8f5965ffa8d43cb1d03f7130dba4".gsub!("ronin:", "0x")
-address_2 = "ronin:e530affded5adb5dfdc209b7e9b9439384b95189".gsub!("ronin:", "0x")
-address_3 = "ronin:642de1680ed811bc34b52115ceeca3a66d147fa3".gsub!("ronin:", "0x")
-address_4 = "ronin:fee2bc9766eca6fecc90b21f9b19172ee333ed1b".gsub!("ronin:", "0x")
-address_5 = "ronin:aa00fcfc595e8b1e3d5fdfbbdd489f63a6f227c1".gsub!("ronin:", "0x")
 
-@addresses =[address_1, address_2, address_3, address_4, address_5]
+addresses = {
+  address_1: "ronin:805d40d62c9d8f5965ffa8d43cb1d03f7130dba4".gsub!("ronin:", "0x"),
+  address_2: "ronin:e530affded5adb5dfdc209b7e9b9439384b95189".gsub!("ronin:", "0x"),
+  address_3: "ronin:642de1680ed811bc34b52115ceeca3a66d147fa3".gsub!("ronin:", "0x"),
+  address_4: "ronin:fee2bc9766eca6fecc90b21f9b19172ee333ed1b".gsub!("ronin:", "0x"),
+  address_5: "ronin:aa00fcfc595e8b1e3d5fdfbbdd489f63a6f227c1".gsub!("ronin:", "0x")
+}
 
-@addresses.each do |address|
-  @metrics = AXIEAPI.add_metrics(address)
-  Team.create!(
-    user_id: User.all[0].id,
-    ronin_address: address,
-    mmr: @metrics["mmr"],
-    rank: @metrics["rank"],
-    current_slp: @metrics["total_slp"],
-    total_slp: @metrics["raw_total"],
-    last_claim: @metrics["last_claim"],
-    next_claim: @metrics["next_claim"],
-    scholar_name: "Scholar#{rand(1..9999)}"
-  )
-end
-
-puts "#{Team.count} teams were created"
-
-unless AXIEAPI.add_axies(@addresses.first).nil?
-
-  @addresses.each do |address|
-    AXIEAPI.add_axies(address)["data"]["axies"]["results"].each do |axie|
-      axie_genes = AXIEAPI.add_genes_to_axie(axie["id"].to_i)
+addresses.each do |address_name, address|
+  if !AxieApi.new.add_axies(address).nil?
+    AxieApi.new.add_axies(address)["data"]["axies"]["results"].each do |axie|
+      axie_genes = AxieApi.new.add_genes_to_axie(axie["id"].to_i)
       Pet.create!(
         team_id: Team.where(ronin_address: address)[0].id,
         image: axie["image"],
@@ -94,50 +74,80 @@ unless AXIEAPI.add_axies(@addresses.first).nil?
       )
     end
   end
-
 end
 
 puts "#{Pet.count} Axies were created"
 
-unless AXIEAPI.add_battles(@addresses.first).nil?
-  @addresses.each do |address|
-    @battles = AXIEAPI.add_battles(address)
-    @battles["battles"].each do |battle|
-      battle_id = battle["battle_uuid"]
-      result = battle["winner"] == address ? "won" : "lost"
+metrics = AxieApi.new
 
-      new_mmr = 0
-      old_mmr = 0
+addresses.each do |address_name, address|
+  temp_metrics = metrics.add_metrics(address)
+  Team.create!(
+    user_id: User.all[0].id,
+    ronin_address: address,
+    mmr: temp_metrics["mmr"],
+    rank: temp_metrics["rank"],
+    current_slp: temp_metrics["total_slp"],
+    total_slp: temp_metrics["raw_total"],
+    last_claim: temp_metrics["last_claim"],
+    next_claim: temp_metrics["next_claim"],
+    scholar_name: "Scholar#{rand(1..9999)}"
+  )
+end
 
-      battle["eloAndItem"].each do |player|
-        if player["player_id"] == address
-          new_mmr = player["new_elo"]
-          old_mmr = player["old_elo"]
-        end
-      end
+puts "#{Team.count} teams were created"
 
-      Battle.create(
-        result: result,
-        battle_uuid: battle_id,
-        ronin_address: address,
-        new_mmr: new_mmr,
-        old_mmr: old_mmr
+battles = AxieApi.new
+battles_hash = {}
+battles_array = []
+battles_hash_elo = {}
+
+addresses.each do |address_name, address|
+  battles_hash["#{address}"] = battles.add_battles(address)["battles"]
+end
+
+battles_hash.each do |address, battles|
+  @current_address = address
+  battles.each do |battle|
+    battle_id = battle["battle_uuid"]
+    battle["winner"] == @current_address ? result = "won" : result = "lost"
+    battles_hash_elo[battle_id] = battle["eloAndItem"]
+    Battle.create!(
+      result: result,
+      battle_uuid: battle_id,
+      ronin_address: @current_address,
       )
-    end
   end
 end
 
+Battle.all.each do |battle|
+
+  @new_mmr = 0
+  @old_mmr = 0
+
+  battles_hash_elo[battle[:battle_uuid]].each do |player|
+    if player["player_id"] == battle[:ronin_address]
+      @new_mmr = player["new_elo"]
+      @old_mmr = player["old_elo"]
+    end
+  end
+  battle[:new_mmr] = @new_mmr
+  battle[:old_mmr] = @old_mmr
+  battle.save
+end
+
+
 puts "#{Battle.count} Battles were created"
 
-@addresses.each do |address|
+addresses.each do |address_name, address|
   team = Team.where(ronin_address: address)[0]
-  team.win_rate = AXIEAPI.check_win_rate(team)
+  team.win_rate = AxieApi.new.check_win_rate(team)
   team.save
 end
 
 puts "Win rate updated"
 
-@addresses.each do |address|
+addresses.each do |address_name, address|
 
   DailyEarning.create(daily_slp: 100, date: Date.today, ronin_address: address)
   DailyEarning.create(daily_slp: 150, date: Date.today - 1, ronin_address: address)

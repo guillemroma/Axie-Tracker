@@ -78,19 +78,22 @@ class UsersController < ApplicationController
       end
     end
 
-    fetch_coins
-    @articles = Info.present
+    fetch_coins if !fetch_coins.nil?
+    info = Info.new
+    @articles = info.present
     @article_count = 0
   end
 
   private
 
   def fetch_coins
-    @btc_usd = Coin.add_btc
-    @eth_usd = Coin.add_eth
-    @axs_usd = Coin.add_axs
-    @slp_usd = Coin.add_slp
-    @ron_usd = Coin.add_ron
-    @usd_to_eur_er = Exchange.add('USD','EUR')
+    new_coin = Coin.new
+    new_exchange = Exchange.new
+    @btc_usd = new_coin.add_btc
+    @eth_usd = new_coin.add_eth
+    @axs_usd = new_coin.add_axs
+    @slp_usd = new_coin.add_slp
+    @ron_usd = new_coin.add_ron
+    @usd_to_eur_er = new_exchange.add('USD','EUR')
   end
 end

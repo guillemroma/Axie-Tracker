@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
   get "/ranking", to: "rankings#index"
-  get "/ranking/teams/:ronin_address", to: "teams#show"
+  get "/ranking/teams/:ronin_address", to: "rankings#show"
 
   get "/users", to: "users#index"
   get "/users/:id", to: "users#show"

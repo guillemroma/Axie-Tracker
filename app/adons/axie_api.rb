@@ -1,11 +1,14 @@
-module AXIEAPI
+class AxieApi
   require 'uri'
   require 'net/http'
   require 'openssl'
   require 'json'
   require 'timeout'
 
-  def AXIEAPI.add_axies(ronin_address)
+  def initialize()
+  end
+
+  def add_axies(ronin_address)
 
     url = URI("https://axie-infinity.p.rapidapi.com/get-axies/#{ronin_address}")
 
@@ -14,22 +17,23 @@ module AXIEAPI
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
 
-    AXIEAPI.manage_request_with_api_key(url, http)
+    manage_request_with_api_key(url, http)
 
   end
 
-  def AXIEAPI.add_battles(ronin_address)
+  def add_battles(ronin_address)
 
     url = URI("https://game-api.axie.technology/logs/pvp/#{ronin_address}")
 
     http = Net::HTTP.new(url.host, url.port)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    AXIEAPI.manage_request(url, http)
+
+    manage_request(url, http)
 
   end
 
-  def AXIEAPI.check_win_rate(team)
+  def check_win_rate(team)
     wins = 0
     battles = 0
 
@@ -40,7 +44,7 @@ module AXIEAPI
     return @win_rate
   end
 
-  def AXIEAPI.add_genes_to_axie(axie_id)
+  def add_genes_to_axie(axie_id)
 
     url = URI("https://api.axie.technology/getgenes/#{axie_id}/all")
 
@@ -48,11 +52,11 @@ module AXIEAPI
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
-    AXIEAPI.manage_request(url, http)
+    manage_request(url, http)
 
   end
 
-  def AXIEAPI.add_metrics(ronin_address)
+  def add_metrics(ronin_address)
 
     url = URI("https://game-api.axie.technology/api/v2/#{ronin_address}")
 
@@ -60,11 +64,11 @@ module AXIEAPI
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
 
-    AXIEAPI.manage_request(url, http)
+    manage_request(url, http)
 
   end
 
-  def AXIEAPI.check_win_rate_ranking(ronin_address)
+  def check_win_rate_ranking(ronin_address)
     wins = 0
     battles = 0
 
@@ -77,7 +81,7 @@ module AXIEAPI
 
   private
 
-  def AXIEAPI.manage_request(url, http)
+  def manage_request(url, http)
   #we first check if the api server is responding or not
   #the amount of seconds that we can afford to test that is 3
   #if in 3 seconds we have not gotten a response, then the method returns "nil"
@@ -86,7 +90,7 @@ module AXIEAPI
   #and will return "nil" (as specified before)
 
     begin
-      status= Timeout::timeout(1) {
+      status= Timeout::timeout(3) {
         request = Net::HTTP::Get.new(url)
         response = http.request(request)
       }
@@ -103,13 +107,13 @@ module AXIEAPI
   #(meaning that the reply.message will be "OK"), then we parse the Json file
   #otherwise we return nil
     if response.message == "OK"
-      json_response = JSON.parse(response.body)
+      JSON.parse(response.body)
     else
       return nil
     end
   end
 
-  def AXIEAPI.manage_request_with_api_key(url, http)
+  def manage_request_with_api_key(url, http)
 
     begin
       status = Timeout::timeout(1) {
