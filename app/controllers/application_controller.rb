@@ -8,6 +8,12 @@ class ApplicationController < ActionController::Base
   # config.autoload_paths += Dir.glob("#{config.root}/app/controllers/exchange")
   # config.autoload_paths += Dir.glob("#{config.root}/app/controllers/info")
   # config.autoload_paths += Dir.glob("#{config.root}/app/controllers/select_teams")
+  require_relative "../axie_api.rb"
+  require_relative "../coin.rb"
+  require_relative "../exchange.rb"
+  require_relative "../info.rb"
+  require_relative "../select_teams.rb"
+
 
   protected
 

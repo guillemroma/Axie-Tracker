@@ -6,10 +6,11 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-require_relative '../app/controllers/modules/add_axie.rb'
-require_relative '../app/controllers/modules/exchange.rb'
-require_relative '../app/controllers/modules/coin.rb'
-require_relative '../app/controllers/modules/info.rb'
+require_relative "../app/axie_api.rb"
+require_relative "../app/coin.rb"
+require_relative "../app/exchange.rb"
+require_relative "../app/info.rb"
+require_relative "../app/select_teams.rb"
 
 User.destroy_all
 Battle.destroy_all
@@ -50,73 +51,28 @@ address_3 = "ronin:642de1680ed811bc34b52115ceeca3a66d147fa3".gsub!("ronin:", "0x
 address_4 = "ronin:fee2bc9766eca6fecc90b21f9b19172ee333ed1b".gsub!("ronin:", "0x")
 address_5 = "ronin:aa00fcfc595e8b1e3d5fdfbbdd489f63a6f227c1".gsub!("ronin:", "0x")
 
-addresses =[address_1, address_2, address_3, address_4, address_5]
+@addresses =[address_1, address_2, address_3, address_4, address_5]
 
-Team.create!(
-      user_id: User.all[0].id,
-      ronin_address: address_1,
-      mmr: AXIEAPI.add_metrics(address_1)["mmr"],
-      rank: AXIEAPI.add_metrics(address_1)["rank"],
-      current_slp: AXIEAPI.add_metrics(address_1)["total_slp"],
-      total_slp: AXIEAPI.add_metrics(address_1)["raw_total"],
-      last_claim: AXIEAPI.add_metrics(address_1)["last_claim"],
-      next_claim: AXIEAPI.add_metrics(address_1)["next_claim"],
-      scholar_name: "Nico"
-    )
-
-Team.create!(
-      user_id: User.all[1].id,
-      ronin_address: address_2,
-      mmr: AXIEAPI.add_metrics(address_2)["mmr"],
-      rank: AXIEAPI.add_metrics(address_2)["rank"],
-      current_slp: AXIEAPI.add_metrics(address_2)["total_slp"],
-      total_slp: AXIEAPI.add_metrics(address_2)["raw_total"],
-      last_claim: AXIEAPI.add_metrics(address_2)["last_claim"],
-      next_claim: AXIEAPI.add_metrics(address_2)["next_claim"],
-      scholar_name: "Jerwin"
-    )
-
-Team.create!(
-      user_id: User.all[2].id,
-      ronin_address: address_3,
-      mmr: AXIEAPI.add_metrics(address_3)["mmr"],
-      rank: AXIEAPI.add_metrics(address_3)["rank"],
-      current_slp: AXIEAPI.add_metrics(address_3)["total_slp"],
-      total_slp: AXIEAPI.add_metrics(address_3)["raw_total"],
-      last_claim: AXIEAPI.add_metrics(address_3)["last_claim"],
-      next_claim: AXIEAPI.add_metrics(address_3)["next_claim"],
-      scholar_name: "Amfx"
-    )
-
-Team.create!(
-      user_id: User.all[3].id,
-      ronin_address: address_4,
-      mmr: AXIEAPI.add_metrics(address_4)["mmr"],
-      rank: AXIEAPI.add_metrics(address_4)["rank"],
-      current_slp: AXIEAPI.add_metrics(address_4)["total_slp"],
-      total_slp: AXIEAPI.add_metrics(address_4)["raw_total"],
-      last_claim: AXIEAPI.add_metrics(address_4)["last_claim"],
-      next_claim: AXIEAPI.add_metrics(address_4)["next_claim"],
-      scholar_name: "Raultite"
-    )
-
-Team.create!(
-      user_id: User.all[4].id,
-      ronin_address: address_5,
-      mmr: AXIEAPI.add_metrics(address_5)["mmr"],
-      rank: AXIEAPI.add_metrics(address_5)["rank"],
-      current_slp: AXIEAPI.add_metrics(address_5)["total_slp"],
-      total_slp: AXIEAPI.add_metrics(address_5)["raw_total"],
-      last_claim: AXIEAPI.add_metrics(address_5)["last_claim"],
-      next_claim: AXIEAPI.add_metrics(address_5)["next_claim"],
-      scholar_name: "PatPat"
-    )
+@addresses.each do |address|
+  @metrics = AXIEAPI.add_metrics(address)
+  Team.create!(
+    user_id: User.all[0].id,
+    ronin_address: address,
+    mmr: @metrics["mmr"],
+    rank: @metrics["rank"],
+    current_slp: @metrics["total_slp"],
+    total_slp: @metrics["raw_total"],
+    last_claim: @metrics["last_claim"],
+    next_claim: @metrics["next_claim"],
+    scholar_name: "Scholar#{rand(1..9999)}"
+  )
+end
 
 puts "#{Team.count} teams were created"
 
-unless AXIEAPI.add_axies(addresses.first).nil?
+unless AXIEAPI.add_axies(@addresses.first).nil?
 
-  addresses.each do |address|
+  @addresses.each do |address|
     AXIEAPI.add_axies(address)["data"]["axies"]["results"].each do |axie|
       axie_genes = AXIEAPI.add_genes_to_axie(axie["id"].to_i)
       Pet.create!(
@@ -143,9 +99,10 @@ end
 
 puts "#{Pet.count} Axies were created"
 
-unless AXIEAPI.add_battles(addresses.first).nil?
-  addresses.each do |address|
-    AXIEAPI.add_battles(address)["battles"].each do |battle|
+unless AXIEAPI.add_battles(@addresses.first).nil?
+  @addresses.each do |address|
+    @battles = AXIEAPI.add_battles(address)
+    @battles["battles"].each do |battle|
       battle_id = battle["battle_uuid"]
       result = battle["winner"] == address ? "won" : "lost"
 
@@ -172,7 +129,7 @@ end
 
 puts "#{Battle.count} Battles were created"
 
-addresses.each do |address|
+@addresses.each do |address|
   team = Team.where(ronin_address: address)[0]
   team.win_rate = AXIEAPI.check_win_rate(team)
   team.save
@@ -180,7 +137,7 @@ end
 
 puts "Win rate updated"
 
-addresses.each do |address|
+@addresses.each do |address|
 
   DailyEarning.create(daily_slp: 100, date: Date.today, ronin_address: address)
   DailyEarning.create(daily_slp: 150, date: Date.today - 1, ronin_address: address)
