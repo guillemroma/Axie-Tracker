@@ -13,8 +13,9 @@ export default class extends Controller {
     if (this.formTarget.classList.contains("add")) {
       fetch(url, {
         method: "POST",
-        headers: { "Accept": "text/plain",
-        "X-CSRF-Token": document.querySelector("[name='csrf-token']").content
+        headers: {
+          "Accept": "text/plain",
+          "X-CSRF-Token": document.querySelector("[name='csrf-token']").content
       }
     })
     .then(response => response.text())
