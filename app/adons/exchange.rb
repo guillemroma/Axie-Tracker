@@ -4,7 +4,10 @@ class Exchange
   require 'openssl'
   require 'json'
 
+  attr_accessor :usd_to_eur_er
+
   def initialize()
+    @usd_to_eur_er = 0
   end
 
   def add(from,to)

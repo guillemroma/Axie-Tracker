@@ -23,7 +23,11 @@
           </div>
           <div>
             <div class="d-flex">
-              <%= number_with_delimiter(battle.new_mmr, :delimiter => ',') %>
+              <% if battle.new_mmr.nil? %>
+                <%= " - " %>
+              <% else %>
+                <%= number_with_delimiter(battle.new_mmr, :delimiter => ',') %>
+              <% end %>
             </div>
           </div>
         </div>
@@ -32,7 +36,11 @@
             <p><strong>Points</strong></p>
           </div>
           <div class="d-flex">
-            <%= ((battle.new_mmr - battle.old_mmr) < 0) ? "#{(battle.new_mmr - battle.old_mmr).to_s.gsub!("-","")} 💀" : "#{(battle.new_mmr - battle.old_mmr)} 🔥"%>
+            <% if battle.new_mmr.nil? %>
+              <%= (battle.result == "lost") ? "- 💀" : "- 🔥"%>
+            <% else %>
+              <%= ((battle.new_mmr - battle.old_mmr) < 0) ? "#{(battle.new_mmr - battle.old_mmr).to_s.gsub!("-","")} 💀" : "#{(battle.new_mmr - battle.old_mmr)} 🔥"%>
+            <% end %>
           </div>
         </div>
       </div>

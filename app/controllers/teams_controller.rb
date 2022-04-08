@@ -5,30 +5,29 @@ class TeamsController < ApplicationController
   require 'date'
 
   def show
-
     axi_api = AxieApi.new
     @team = Team.find(params[:id])
     @battles = Battle.where(ronin_address: @team.ronin_address).paginate(:page => params[:page], :per_page => 15)
 
     unless axi_api.add_axies(@team.ronin_address).nil?
       axi_api.add_axies(@team.ronin_address)["data"]["axies"]["results"].each do |axie|
-        @axie_genes = axi_api.add_genes_to_axie(axie["id"].to_i)
+        axie_genes = axi_api.add_genes_to_axie(axie["id"].to_i)
         Pet.create(
           team_id: @user_team.id,
           image: axie["image"],
-          axie_game_id: (@axie_genes.nil? ? 0 : @axie_genes["story_id"]),
-          name: (@axie_genes.nil? ? "-" : @axie_genes["name"]),
-          hp: (@axie_genes.nil? ? 0 : @axie_genes["stats"]["hp"]),
-          morale: (@axie_genes.nil? ? 0 : @axie_genes["stats"]["morale"]),
-          speed: (@axie_genes.nil? ? 0 : @axie_genes["stats"]["speed"]),
-          skill: (@axie_genes.nil? ? 0 : @axie_genes["stats"]["skill"]),
-          axie_class: (@axie_genes.nil? ? "-" : @axie_genes["class"]),
-          eyes: (@axie_genes.nil? ? "-" : @axie_genes["parts"][0]["name"]),
-          ears: (@axie_genes.nil? ? "-" : @axie_genes["parts"][1]["name"]),
-          back: (@axie_genes.nil? ? "-" : @axie_genes["parts"][2]["name"]),
-          mouth: (@axie_genes.nil? ? "-" : @axie_genes["parts"][3]["name"]),
-          horn: (@axie_genes.nil? ? "-" : @axie_genes["parts"][4]["name"]),
-          tail: (@axie_genes.nil? ? "-" : @axie_genes["parts"][5]["name"])
+          axie_game_id: (axie_genes.nil? ? 0 : axie_genes["story_id"]),
+          name: (axie_genes.nil? ? "-" : axie_genes["name"]),
+          hp: (axie_genes.nil? ? 0 : axie_genes["stats"]["hp"]),
+          morale: (axie_genes.nil? ? 0 : axie_genes["stats"]["morale"]),
+          speed: (axie_genes.nil? ? 0 : axie_genes["stats"]["speed"]),
+          skill: (axie_genes.nil? ? 0 : axie_genes["stats"]["skill"]),
+          axie_class: (axie_genes.nil? ? "-" : axie_genes["class"]),
+          eyes: (axie_genes.nil? ? "-" : axie_genes["parts"][0]["name"]),
+          ears: (axie_genes.nil? ? "-" : axie_genes["parts"][1]["name"]),
+          back: (axie_genes.nil? ? "-" : axie_genes["parts"][2]["name"]),
+          mouth: (axie_genes.nil? ? "-" : axie_genes["parts"][3]["name"]),
+          horn: (axie_genes.nil? ? "-" : axie_genes["parts"][4]["name"]),
+          tail: (axie_genes.nil? ? "-" : axie_genes["parts"][5]["name"])
         )
       end
     end
@@ -63,11 +62,9 @@ class TeamsController < ApplicationController
     end
 
     (@display_charts = true) if (DailyEarning.having("date < ? ", Date.today - 3))
-
   end
 
   def create
-
     @user = User.find(params["team"]["user_id"].to_i)
     @address = params["team"]["ronin_address"].gsub!("ronin:", "0x")
 
@@ -86,40 +83,51 @@ class TeamsController < ApplicationController
       scholar_name: params["team"]["scholar_name"]
       )
 
-    battles = axi_api.add_battles(@address)
-    battles_hash_elo = {}
-
-    unless battles.nil?
+    #In order to do the battle show we cannot nest more than to each loops
+    #because the code breaks constantly. We initially had it like this but since it was
+    #extremlly unstable we switched to this new approach:
+    #We first call the axi api for battles and at the same time we create an empty hash
+    #in this empty hash we will store the battle uid and the result of the battle (we do it this way beacuse
+    #we need to iterate multiple times on the json response that we recieve from the api)
+    battles = axie_api.add_battles(@address)
+    @battles_hash_elo = {}
+    #so we basically:
+    #1-Create a battle with all the information available in the first iteration
+    unless battles["battles"].nil?
       battles["battles"].each do |battle|
-      battle_id = battle["battle_uuid"]
-      battle["winner"] == @address ? result = "won" : result = "lost"
-      battles_hash_elo[battle_id] = battle["eloAndItem"]
-
-      Battle.create(
-        result: result,
-        battle_uuid: battle_id,
-        ronin_address: @address
-      )
+        #battle will refer to the iteration on the battles hash, new_battle to the
+        #battle instance that we will create and then save in the DB as a new record
+        new_battle_id = battle["battle_uuid"]
+        battle["winner"] == params[:ronin_address] ? result = "won" : result = "lost"
+        #important to note that at this stage we basicalli take the empty hash we previously created
+        #and we fill it with a key (being the battle_id, a unique identifier that every battle has)
+        #and a value (being the values associated to the "eloAndItem" key from the json response)
+        @battles_hash_elo[new_battle_id] = battle["eloAndItem"]
+        new_battle = Battle.create(
+          result: result,
+          battle_uuid: new_battle_id,
+          ronin_address: params[:ronin_address]
+        )
       end
     end
 
-    Battle.where(ronin_address: @address).each do |battle|
-
-      @new_mmr = 0
-      @old_mmr = 0
-
-      battles_hash_elo[battle[:battle_uuid]].each do |player|
-        if player["player_id"] == battle[:ronin_address]
-          @new_mmr = player["new_elo"]
-          @old_mmr = player["old_elo"]
-        end
+    #2-Once the battles are created (with partial information), we fetch them
+    #one by one so we can update the missing fields
+    Battle.where(ronin_address: params[:ronin_address]).each do |battle|
+      new_mmr = 0
+      old_mmr = 0
+      unless @battles_hash_elo[battle[:battle_uuid]].nil?
+        @battles_hash_elo[battle[:battle_uuid]].each do |player|
+          if player["player_id"] == battle[:ronin_address]
+            new_mmr = player["new_elo"]
+            old_mmr = player["old_elo"]
+          end
+          end
+        battle[:new_mmr] = new_mmr
+        battle[:old_mmr] = old_mmr
+        battle.save
       end
-      battle[:new_mmr] = @new_mmr
-      battle[:old_mmr] = @old_mmr
-      battle.save
-
     end
-
 
     unless team_metrics.nil?
       DailyEarning.create(daily_slp: team_metrics["total_slp"], date: Date.today, ronin_address: @user_team.ronin_address)
@@ -131,39 +139,20 @@ class TeamsController < ApplicationController
     @user_team.save
 
     redirect_to "/users/#{@user.id}"
-
   end
 
   def update
-
-    if params["team"]["ronin_address"].present? && params["team"]["scholar_name"].present?
-
-      @team = Team.where(ronin_address: params["team"]["ronin_address"]).first
-      @team.update(scholar_name: params["team"]["scholar_name"])
-      @team.save
-
-    else
-
-      users = User.all
-      users.each do |user|
-        user.teams.each do |team|
-          address = team.ronin_address
-          team_metrics = AXIEAPI.add_metrics(address)
-          update_team_background(team, team_metrics, address)
-        end
-      end
-
-    end
+    @team = Team.where(ronin_address: params["team"]["ronin_address"]).first
+    @team.update(scholar_name: params["team"]["scholar_name"])
+    @team.save
 
     respond_to do |format|
       format.html # Follow regular flow of Rails
       format.text { render partial: "teams/list_teams", locals: { team: @team }, formats: [:html] }
     end
-
   end
 
   def destroy
-
     team = Team.find(params["id"])
     battles = Battle.where(ronin_address: team.ronin_address)
     daily_earnings = DailyEarning.where(ronin_address: team.ronin_address)
@@ -179,106 +168,5 @@ class TeamsController < ApplicationController
     daily_rankings.destroy_all
 
     redirect_to "/users/#{@user}"
-
-  end
-
-  private
-
-  def update_team_background(team, team_metrics, address)
-
-    #Update the main team metrics
-    team.mmr = team_metrics["mmr"]
-    team.rank = team_metrics["rank"]
-    team.current_slp = team_metrics["total_slp"]
-    team.total_slp = team_metrics["raw_total"]
-    team.last_claim = team_metrics["last_claim"]
-    team.next_claim = team_metrics["next_claim"]
-    team.win_rate = AXIEAPI.check_win_rate(team)
-    team.save
-
-    #Update the Axies that one team has
-    #Update the parts of the axie, in the future this will be upgraded regularly
-    AXIEAPI.add_axies(address)["data"]["axies"]["results"].each do |axie|
-      axie_genes = AXIEAPI.add_genes_to_axie(axie["id"].to_i)
-      Pet.create(
-        team_id: team.id,
-        image: axie["image"],
-        axie_game_id: axie_genes["story_id"],
-        name: axie_genes["name"],
-        hp: axie_genes["stats"]["hp"],
-        morale: axie_genes["stats"]["morale"],
-        speed: axie_genes["stats"]["speed"],
-        skill: axie_genes["stats"]["skill"],
-        axie_class:  axie_genes["class"],
-        eyes: axie_genes["parts"][0]["name"],
-        ears: axie_genes["parts"][1]["name"],
-        back: axie_genes["parts"][2]["name"],
-        mouth: axie_genes["parts"][3]["name"],
-        horn: axie_genes["parts"][4]["name"],
-        tail: axie_genes["parts"][5]["name"]
-      )
-    end
-
-    #update the battles table with the new battles available
-    AXIEAPI.add_battles(address)["battles"].each do |battle|
-      battle_id = battle["battle_uuid"]
-      result = battle["winner"] == address ? "won" : "lost"
-      Battle.create(team_id: team.id, result: result, battle_uuid: battle_id)
-    end
-
-    #update the cumulative earning table with the current total_slp
-    record_total_slp = CumulativeEarning.where("team_id = ? AND date = ?", team.id, Date.today)[0]
-    record_total_slp.update(total_slp: team.total_slp)
-    record_total_slp.save
-
-    #update the daily earnings table by:
-    #first: select and destroy records that do not pass the 15 days validation criteria
-    cumulative_earning_date_old = CumulativeEarning.where("date < ?",  Date.today - 15)
-    daily_earning_date_old = DailyEarning.where("date < ?",  Date.today - 15)
-
-    cumulative_earning_date_old.destroy_all
-    daily_earning_date_old.destroy_all
-
-    #second: checking if there is a cumulative record from yesterday to perform a substraction
-    #and later: if that is the case, check if there is any record with date today of daily earning
-    #if both conditions are met, just update the record with the new difference of total_slp (if any)
-    #else, we just update today's daily_slp from daily earnings with today's total_slp from cumulative earning
-
-    if DailyEarning.all.detect { |hash| hash[:date] == (Date.today) }
-      if CumulativeEarning.all.detect { |hash| hash[:date] == (Date.today - 1) }
-        daily_total_slp = DailyEarning.where("team_id = ? AND date = ?", team.id, Date.today)[0]
-        daily_total_slp.update(daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", team.id, Date.today)[0].total_slp - CumulativeEarning.where("team_id = ? AND date = ?", team.id, (Date.today - 1))[0].total_slp))
-        daily_total_slp.save
-      else
-        daily_total_slp = DailyEarning.where("team_id = ? AND date = ?", team.id, Date.today)[0]
-        daily_total_slp.update(daily_slp: CumulativeEarning.where("team_id = ? AND date = ?", team.id, Date.today)[0].total_slp)
-        daily_total_slp.save
-      end
-    else
-      #if the above conditions are not met, instead of update we will have to create the record
-      #in order to do so, we follow the same logic (checking if there is any record of cumulative earning from yesterday)
-      if CumulativeEarning.all.detect { |hash| hash[:date] == (Date.today - 1) }
-        DailyEarning.create!(
-          team_id: team.id,
-          daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", team.id, Date.today)[0].total_slp - CumulativeEarning.where("team_id = ? AND date = ?", team.id, (Date.today - 1))[0].total_slp),
-          date: Date.today
-        )
-      else
-        DailyEarning.create!(
-          team_id: team.id,
-          daily_slp: (CumulativeEarning.where("team_id = ? AND date = ?", team.id, Date.today)[0].total_slp - CumulativeEarning.where("team_id = ? AND date = ?", team.id, (Date.today - 1))[0].total_slp),
-          date: Date.today
-        )
-      end
-    end
-
-    daily_mmr = DailyLevel.where("team_id = ? AND date = ?", team.id, Date.today)[0]
-    daily_mmr.update(mmr: team.mmr)
-    daily_mmr.save
-
-    daily_rank = DailyRanking.where("team_id = ? AND date = ?", team.id, Date.today)[0]
-    daily_rank.update(rank: team.rank)
-    daily_rank.save
-
   end
 end
