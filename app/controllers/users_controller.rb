@@ -2,12 +2,9 @@ class UsersController < ApplicationController
   skip_before_action :authenticate_user!, :raise => false
 
   def index
-
     if (params.keys == ["controller", "action"]) && (params[:controller] == "users" && params[:action] == "index") || (params[:MMR] == "" && params["win-rate"] == "" && params[:team] == "" && params[:slp] == "" && params[:controller] == "users" && params[:action] == "index")
-
       #we have grouped the different URLs with no content inside; in that case we want to return all the users since there has not been any filter applied
       @users = User.all
-
     else
 
       #when we pass information in any of the parameters throught the project index filter we activate the filter
@@ -30,7 +27,6 @@ class UsersController < ApplicationController
         @users_team = User.joins(:teams).group("users.id").having("COUNT (*) >= ? AND COUNT (*) <= ?", params[:team].gsub(/,/,"").split().first.to_i, params[:team].gsub(/,/,"").split().last.to_i)
       end
 
-
       if params[:slp].blank?
         @users_slp = User.all
       elsif params[:slp] == "+ 1,000,000"
@@ -52,16 +48,13 @@ class UsersController < ApplicationController
     #the idea is that we need to get all the different options available, per filter
     #in case there are duplicates, we need to earse them
     #finally, we need to sort the items in each array
-
     @mmr_array = ["1 - 1,000", "1,000 - 1,500", "1,500 - 2,000", "2,000 - 2,225", "2,225 - 2,500", "+ 2,500"]
     @win_rates_array = ["0% - 20%", "20% - 40%", "40% - 60%", "60% - 80%", "80% - 100%"]
     @teams_count_array = ["1 - 3", "3 - 5", "5 - 10", "10- 20", "20 - 50", "50 - 100", "+ 100"]
     @total_slps_array = ["1 - 1,000", "1,000 - 5,000", "5,000 - 15,000", "15,000 - 30,000", "30,000 - 60,000", "60,000 - 100,000", "100,000 - 500,000", "+ 1,000,000"]
-
   end
 
   def show
-
     @user = User.find(params[:id])
     @team = Team.new
 
@@ -88,12 +81,12 @@ class UsersController < ApplicationController
 
   def fetch_coins
     new_coin = Coin.new
-    new_exchange = Exchange.new
     @btc_usd = new_coin.add_btc
     @eth_usd = new_coin.add_eth
     @axs_usd = new_coin.add_axs
     @slp_usd = new_coin.add_slp
     @ron_usd = new_coin.add_ron
+    new_exchange = Exchange.new
     @usd_to_eur_er = new_exchange.add('USD','EUR')
   end
 end

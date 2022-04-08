@@ -8,5 +8,4 @@ class Team < ApplicationRecord
 
   validates :scholar_name, presence: true
 
-
 end
