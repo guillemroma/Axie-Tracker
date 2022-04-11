@@ -22,17 +22,23 @@ class RefreshTeamsJob < ApplicationJob
       #same as in the Teams case, we also need to update the daily earnings, mmr and ranking
       #because after each battle, this values will change
       unless team_metrics.nil?
+        #since we only store 20 days of data, we make sure that for every
+        check_old_metrics = DailyEarning.where(ronin_address: team.ronin_address)
+        check_old_metrics.first.delete if check_old_metrics.count > 20
         daily_earnings = DailyEarning.where(ronin_address: team.ronin_address, date: Date.today).first
         unless daily_earnings.nil?
           daily_earnings.update(daily_slp: team_metrics["total_slp"])
           daily_earnings.save
         end
-
+        check_old_metrics = DailyLevel.where(ronin_address: team.ronin_address)
+        check_old_metrics.first.delete if check_old_metrics.count > 20
         daily_levels = DailyLevel.where(ronin_address: team.ronin_address, date: Date.today).first
         unless daily_levels.nil?
           daily_levels.update(mmr: team_metrics["mmr"])
           daily_levels.save
         end
+        check_old_metrics = DailyRanking.where(ronin_address: team.ronin_address)
+        check_old_metrics.first.delete if check_old_metrics.count > 20
         daily_rankings = DailyRanking.where(ronin_address: team.ronin_address, date: Date.today).first
         unless daily_rankings.nil?
           daily_rankings.update(rank: team_metrics["rank"])
@@ -100,9 +106,14 @@ class RefreshTeamsJob < ApplicationJob
       end
 
       #we also have to update team's battles
+      #if we do not want to have too many battles in the DB we erase prior battles and we load the latest ones available in the API
+      #so, we first destroy all the user battles
+      refresh_battles = Battle.where(ronin_address: team.ronin_address)
+      refresh_battles.destroy_all
+
+      #and we then add the new ones
       battles = axie_api.add_battles(team.ronin_address)
       battles_hash_elo = {}
-
       unless battles["battles"].nil?
         battles["battles"].each do |battle|
           battle_id = battle["battle_uuid"]
