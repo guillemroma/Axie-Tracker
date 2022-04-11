@@ -5,13 +5,13 @@ class TeamsController < ApplicationController
   require 'date'
 
   def show
-    axi_api = AxieApi.new
+    axie_api = AxieApi.new
     @team = Team.find(params[:id])
     @battles = Battle.where(ronin_address: @team.ronin_address).paginate(:page => params[:page], :per_page => 15)
 
-    unless axi_api.add_axies(@team.ronin_address).nil?
-      axi_api.add_axies(@team.ronin_address)["data"]["axies"]["results"].each do |axie|
-        axie_genes = axi_api.add_genes_to_axie(axie["id"].to_i)
+    unless axie_api.add_axies(@team.ronin_address).nil?
+      axie_api.add_axies(@team.ronin_address)["data"]["axies"]["results"].each do |axie|
+        axie_genes = axie_api.add_genes_to_axie(axie["id"].to_i)
         Pet.create(
           team_id: @user_team.id,
           image: axie["image"],
@@ -68,8 +68,8 @@ class TeamsController < ApplicationController
     @user = User.find(params["team"]["user_id"].to_i)
     @address = params["team"]["ronin_address"].gsub!("ronin:", "0x")
 
-    axi_api = AxieApi.new
-    team_metrics = axi_api.add_metrics(@address)
+    axie_api = AxieApi.new
+    team_metrics = axie_api.add_metrics(@address)
 
     @user_team = Team.create(
       user_id: current_user.id,
@@ -135,7 +135,7 @@ class TeamsController < ApplicationController
       DailyRanking.create(rank: team_metrics["rank"], date: Date.today, ronin_address: @user_team.ronin_address)
     end
 
-    (@user_team.win_rate = axi_api.check_win_rate(@user_team)) if !axi_api.check_win_rate(@user_team).nil?
+    (@user_team.win_rate = axie_api.check_win_rate(@user_team)) if !axie_api.check_win_rate(@user_team).nil?
     @user_team.save
 
     redirect_to "/users/#{@user.id}"
