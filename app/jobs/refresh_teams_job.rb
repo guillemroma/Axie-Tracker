@@ -1,4 +1,4 @@
-class RefreshStuffJob < ApplicationJob
+class RefreshTeamsJob < ApplicationJob
   queue_as :default
 
   def perform
@@ -7,8 +7,8 @@ class RefreshStuffJob < ApplicationJob
     #we need ot make sure that these are being regulary updated
     teams = Team.all
     teams.each do |team|
-      axi_api = AxieApi.new
-      team_metrics = axi_api.add_metrics(team.ronin_address)
+      axie_api = AxieApi.new
+      team_metrics = axie_api.add_metrics(team.ronin_address)
       team.update(
         mmr: (team_metrics.nil? ? 0 : team_metrics["mmr"]),
         rank: (team_metrics.nil? ? 0 : team_metrics["rank"]),
@@ -47,10 +47,10 @@ class RefreshStuffJob < ApplicationJob
       #hence we need to create the axies from scratch
       #2) In future versions of the game user will be able to change parts of their axies
       #hence we need to make sure that these are being under constant scrutiny
-      unless axi_api.add_axies(team.ronin_address).nil?
-        axies = axi_api.add_axies(team.ronin_address)
+      unless axie_api.add_axies(team.ronin_address).nil?
+        axies = axie_api.add_axies(team.ronin_address)
         axies["data"]["axies"]["results"].each do |axie|
-          axie_genes = axi_api.add_genes_to_axie(axie["id"].to_i)
+          axie_genes = axie_api.add_genes_to_axie(axie["id"].to_i)
           if Pet.where(axie_game_id: axie_genes["story_id"])
             pet = Pet.where(axie_game_id: axie_genes["story_id"])
             pet.update(
@@ -100,7 +100,7 @@ class RefreshStuffJob < ApplicationJob
       end
 
       #we also have to update team's battles
-      battles = axi_api.add_battles(team.ronin_address)
+      battles = axie_api.add_battles(team.ronin_address)
       battles_hash_elo = {}
 
       unless battles["battles"].nil?
@@ -134,18 +134,6 @@ class RefreshStuffJob < ApplicationJob
         battle[:old_mmr] = @old_mmr
         battle.save
       end
-    end
-
-    Ranking.destroy_all
-    world_ranking = SelectTeams.new
-    fetch_teams = world_ranking.add
-    fetch_teams["items"].each do |team|
-      Ranking.create(
-        rank: team["rank"],
-        scholar_name: team["name"],
-        mmr: team["elo"],
-        ronin_address: team["client_id"]
-      )
     end
   end
 end

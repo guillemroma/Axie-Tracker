@@ -77,209 +77,212 @@ const initChart = () => {
 
     WinRateChart.resize(300, 300)
 
-    const ctx = document.getElementById('SLP-Chart').getContext('2d');
-    const SLPChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: JSON.parse(ctx.canvas.dataset.labels).reverse(),
-        datasets: [{
-          data: JSON.parse(ctx.canvas.dataset.data).reverse(),
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        borderDash: [10, 10],
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            display: false,
-            beginAtZero: true,
-            grace: '30%',
-            grid: {
-              display: false
+    const nullVariable = null
+    if (nullVariable !== document.getElementById('SLP-Chart')) {
+      const ctx = document.getElementById('SLP-Chart').getContext('2d');
+      const SLPChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: JSON.parse(ctx.canvas.dataset.labels).reverse(),
+          datasets: [{
+            data: JSON.parse(ctx.canvas.dataset.data).reverse(),
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          borderDash: [10, 10],
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              display: false,
+              beginAtZero: true,
+              grace: '30%',
+              grid: {
+                display: false
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              },
+              font: {
+                color: 'red',
+                size: 6
+              }
             }
           },
-          x: {
-            grid: {
+          plugins: {
+            legend: {
               display: false
             },
-            font: {
-              color: 'red',
-              size: 6
+            datalabels: {
+              backgroundColor: '#21B6A8',
+              borderRadius: 50,
+              padding: 10,
+              color: 'white',
+              font: {
+                family: 'Montserrat',
+                size: 13,
+                weight: 'bold'
+              },
+              formatter: function (value, context) {
+                return value.toLocaleString()
+              }
             }
-          }
-        },
-        plugins: {
-          legend: {
-            display: false
           },
-          datalabels: {
-            backgroundColor: '#21B6A8',
-            borderRadius: 50,
-            padding: 10,
-            color: 'white',
-            font: {
-              family: 'Montserrat',
-              size: 13,
-              weight: 'bold'
+          elements: {
+            point: {
+              backgroundColor: '#21B6A8',
+              radius: 0.5
             },
-            formatter: function (value, context) {
-              return value.toLocaleString()
+            line: {
+              borderWidth: 1,
+              borderColor: '#21B6A8'
             }
-          }
-        },
-        elements: {
-          point: {
-            backgroundColor: '#21B6A8',
-            radius: 0.5
-          },
-          line: {
-            borderWidth: 1,
-            borderColor: '#21B6A8'
           }
         }
       }
-    }
-    );
-    SLPChart.resize(300, 300)
+      );
+      SLPChart.resize(300, 300)
 
-    const ctx2 = document.getElementById('MMR-Chart').getContext('2d');
-    const MMRChart = new Chart(ctx2, {
-      type: 'line',
-      data: {
-        labels: JSON.parse(ctx2.canvas.dataset.labels).reverse(),
-        datasets: [{
-          data: JSON.parse(ctx2.canvas.dataset.data).reverse(),
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        borderDash: [10, 10],
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            display: false,
-            beginAtZero: true,
-            grace: '30%',
-            grid: {
-              display: false
+      const ctx2 = document.getElementById('MMR-Chart').getContext('2d');
+      const MMRChart = new Chart(ctx2, {
+        type: 'line',
+        data: {
+          labels: JSON.parse(ctx2.canvas.dataset.labels).reverse(),
+          datasets: [{
+            data: JSON.parse(ctx2.canvas.dataset.data).reverse(),
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          borderDash: [10, 10],
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              display: false,
+              beginAtZero: true,
+              grace: '30%',
+              grid: {
+                display: false
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              },
+              font: {
+                color: 'red',
+                size: 6
+              }
             }
           },
-          x: {
-            grid: {
+          plugins: {
+            legend: {
               display: false
             },
-            font: {
-              color: 'red',
-              size: 6
+            datalabels: {
+              backgroundColor: '#21B6A8',
+              borderRadius: 50,
+              padding: 10,
+              color: 'white',
+              font: {
+                family: 'Montserrat',
+                size: 13,
+                weight: 'bold'
+              },
+              formatter: function (value, context) {
+                return value.toLocaleString()
+              }
             }
-          }
-        },
-        plugins: {
-          legend: {
-            display: false
           },
-          datalabels: {
-            backgroundColor: '#21B6A8',
-            borderRadius: 50,
-            padding: 10,
-            color: 'white',
-            font: {
-              family: 'Montserrat',
-              size: 13,
-              weight: 'bold'
+          elements: {
+            point: {
+              backgroundColor: '#21B6A8',
+              radius: 0.5
             },
-            formatter: function (value, context) {
-              return value.toLocaleString()
+            line: {
+              borderWidth: 1,
+              borderColor: '#21B6A8'
             }
-          }
-        },
-        elements: {
-          point: {
-            backgroundColor: '#21B6A8',
-            radius: 0.5
-          },
-          line: {
-            borderWidth: 1,
-            borderColor: '#21B6A8'
           }
         }
       }
-    }
-    );
+      );
 
-    MMRChart.resize(300, 300)
+      MMRChart.resize(300, 300)
 
-    const ctx3 = document.getElementById('Ranking-Chart').getContext('2d');
-    const RankingChart = new Chart(ctx3, {
-      type: 'line',
-      data: {
-        labels: JSON.parse(ctx3.canvas.dataset.labels).reverse(),
-        datasets: [{
-          data: JSON.parse(ctx3.canvas.dataset.data).reverse(),
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        borderDash: [10, 10],
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            display: false,
-            beginAtZero: true,
-            grace: '30%',
-            grid: {
-              display: false
+      const ctx3 = document.getElementById('Ranking-Chart').getContext('2d');
+      const RankingChart = new Chart(ctx3, {
+        type: 'line',
+        data: {
+          labels: JSON.parse(ctx3.canvas.dataset.labels).reverse(),
+          datasets: [{
+            data: JSON.parse(ctx3.canvas.dataset.data).reverse(),
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          borderDash: [10, 10],
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              display: false,
+              beginAtZero: true,
+              grace: '30%',
+              grid: {
+                display: false
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              },
+              font: {
+                color: 'red',
+                size: 6
+              }
             }
           },
-          x: {
-            grid: {
+          plugins: {
+            legend: {
               display: false
             },
-            font: {
-              color: 'red',
-              size: 6
+            datalabels: {
+              backgroundColor: '#21B6A8',
+              borderRadius: 50,
+              padding: 10,
+              color: 'white',
+              font: {
+                family: 'Montserrat',
+                size: 13,
+                weight: 'bold'
+              },
+              formatter: function (value, context) {
+                return value.toLocaleString()
+              }
             }
-          }
-        },
-        plugins: {
-          legend: {
-            display: false
           },
-          datalabels: {
-            backgroundColor: '#21B6A8',
-            borderRadius: 50,
-            padding: 10,
-            color: 'white',
-            font: {
-              family: 'Montserrat',
-              size: 13,
-              weight: 'bold'
+          elements: {
+            point: {
+              backgroundColor: '#21B6A8',
+              radius: 0.5
             },
-            formatter: function (value, context) {
-              return value.toLocaleString()
+            line: {
+              borderWidth: 1,
+              borderColor: '#21B6A8'
             }
-          }
-        },
-        elements: {
-          point: {
-            backgroundColor: '#21B6A8',
-            radius: 0.5
-          },
-          line: {
-            borderWidth: 1,
-            borderColor: '#21B6A8'
           }
         }
       }
-    }
-    );
+      );
 
-    RankingChart.resize(300, 300)
-  }
+      RankingChart.resize(300, 300)
+    }
+   }
   )
 }
 
