@@ -1,10 +1,10 @@
-<a href= "/users/<%= favorite_instance.followed_id %>" >
-  <div class="card-dashbaord d-flex justify-content-start">
-    <div class="card-avatar-dashboard d-flex justify-content-center">
-      <img src="https://i.pinimg.com/originals/6b/73/f5/6b73f582d6ba44e65ddea1ed0a073bc6.png" alt="avatar">
-    </div>
-    <div class="card-username-dashboard">
-      <%= favorite_instance.followed.username.present? ? favorite_instance.followed.username : "-" %>
-    </div>
+<div class="card-dashbaord d-flex justify-content-start">
+  <div class="card-avatar-dashboard">
+    <img src="https://i.pinimg.com/originals/6b/73/f5/6b73f582d6ba44e65ddea1ed0a073bc6.png" alt="avatar" class="w-100 h-100">
   </div>
-</a>
+  <div class="card-username-dashboard">
+    <a href= "/users/<%= favorite_instance.followed_id %>">
+      <%= favorite_instance.followed.username.present? ? favorite_instance.followed.username : "-" %>
+    </a>
+  </div>
+</div>

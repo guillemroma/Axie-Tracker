@@ -4,11 +4,15 @@
         <div class="card-show-left-title d-flex justify-content-center">
           <strong class="mt-1 mb-1">Favorite Managers</strong>
         </div>
-        <% if @user.followers_as_follower.present?  %>
-          <% @user.followers_as_follower.each do |favorite_instance| %>
-            <%= render 'favorites', favorite_instance: favorite_instance %>
+        <div class="favorite_users">
+          <% if @user.followers_as_follower.present?  %>
+            <% @user.followers_as_follower.each do |favorite_instance| %>
+              <div>
+                <%= render 'favorites', favorite_instance: favorite_instance %>
+              </div>
+            <% end %>
           <% end %>
-        <% end %>
+        </div>
       </div>
       <div class="card-show-left mt-4 mb-4" >
         <div class="card-show-left-content-first">

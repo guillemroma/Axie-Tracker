@@ -20,9 +20,9 @@ class RankingsController < ApplicationController
     reset_battles.destroy_all
     #In order to do the battle show we cannot nest more than to each loops
     #because the code breaks constantly. We initially had it like this but since it was
-    #extremlly unstable we switched to this new approach:
+    #extremlly unstable we switched it to this new approach:
     #We first call the axi api for battles and at the same time we create an empty hash
-    #in this empty hash we will store the battle uid and the result of the battle (we do it this way beacuse
+    #in this empty hash we store the battle uid and the result of the battle (we do it this way beacuse
     #we need to iterate multiple times on the json response that we recieve from the api)
     axie_api = AxieApi.new
     battles = axie_api.add_battles(params[:ronin_address])
