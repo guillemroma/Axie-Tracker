@@ -36,7 +36,6 @@ class AxieApi
   def check_win_rate(team)
     wins = 0
     battles = 0
-
     Battle.where(ronin_address: team.ronin_address).each do |battle|
       battle.result == "won" ? ((battles += 1) && (wins += 1)) : (battles += 1)
     end

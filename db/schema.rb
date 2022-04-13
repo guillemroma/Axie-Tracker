@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_04_153119) do
+ActiveRecord::Schema.define(version: 2022_04_13_133326) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,6 +108,7 @@ ActiveRecord::Schema.define(version: 2022_04_04_153119) do
     t.string "ronin_address"
     t.string "scholar_name"
     t.float "win_rate"
+    t.float "manager_share"
     t.index ["user_id"], name: "index_teams_on_user_id"
   end
 

@@ -66,7 +66,7 @@ class TeamsController < ApplicationController
 
   def create
     @user = User.find(params["team"]["user_id"].to_i)
-    @address = params["team"]["ronin_address"].gsub!("ronin:", "0x")
+    @address = params["team"]["ronin_address"].gsub!("ronin:", "0x") if params["team"]["ronin_address"].starts_with?("ronin:")
 
     axie_api = AxieApi.new
     team_metrics = axie_api.add_metrics(@address)
@@ -80,9 +80,10 @@ class TeamsController < ApplicationController
       total_slp: (team_metrics.nil? ? 0 : team_metrics["raw_total"]),
       last_claim: (team_metrics.nil? ? 0 : team_metrics["last_claim"]),
       next_claim: (team_metrics.nil? ? 0 : team_metrics["next_claim"]),
-      scholar_name: params["team"]["scholar_name"]
-      )
-
+      scholar_name: params["team"]["scholar_name"],
+      manager_share: params["team"]["manager_share"].to_f.round(2)
+    )
+    
     #In order to do the battle show we cannot nest more than to each loops
     #because the code breaks constantly. We initially had it like this but since it was
     #extremlly unstable we switched it to this new approach:
@@ -92,13 +93,16 @@ class TeamsController < ApplicationController
     battles = axie_api.add_battles(@address)
     @battles_hash_elo = {}
     #so we basically:
+    #0 - we check if there are already battles with the ronin address (meaning that the team is in the ranking)
+    #if so, we destroy them to have a fresh start
+    Battle.where(ronin_address: @address).destroy_all
     #1-Create a battle with all the information available in the first iteration
     unless battles["battles"].nil?
       battles["battles"].each do |battle|
         #battle will refer to the iteration on the battles hash, new_battle to the
         #battle instance that we will create and then save in the DB as a new record
         new_battle_id = battle["battle_uuid"]
-        battle["winner"] == params[:ronin_address] ? result = "won" : result = "lost"
+        battle["winner"] == @address ? result = "won" : result = "lost"
         #important to note that at this stage we basicalli take the empty hash we previously created
         #and we fill it with a key (being the battle_id, a unique identifier that every battle has)
         #and a value (being the values associated to the "eloAndItem" key from the json response)
@@ -106,14 +110,13 @@ class TeamsController < ApplicationController
         new_battle = Battle.create(
           result: result,
           battle_uuid: new_battle_id,
-          ronin_address: params[:ronin_address]
+          ronin_address: @address
         )
       end
     end
-
     #2-Once the battles are created (with partial information), we fetch them
     #one by one so we can update the missing fields
-    Battle.where(ronin_address: params[:ronin_address]).each do |battle|
+    Battle.where(ronin_address: @address).each do |battle|
       new_mmr = 0
       old_mmr = 0
       unless @battles_hash_elo[battle[:battle_uuid]].nil?
@@ -130,14 +133,12 @@ class TeamsController < ApplicationController
     end
 
     unless team_metrics.nil?
-      DailyEarning.create(daily_slp: team_metrics["total_slp"], date: Date.today, ronin_address: @user_team.ronin_address)
-      DailyLevel.create(mmr: team_metrics["mmr"], date: Date.today, ronin_address: @user_team.ronin_address)
-      DailyRanking.create(rank: team_metrics["rank"], date: Date.today, ronin_address: @user_team.ronin_address)
+      DailyEarning.create(daily_slp: team_metrics["total_slp"], date: Date.today, ronin_address: @address)
+      DailyLevel.create(mmr: team_metrics["mmr"], date: Date.today, ronin_address: @address)
+      DailyRanking.create(rank: team_metrics["rank"], date: Date.today, ronin_address: @address)
     end
-
     (@user_team.win_rate = axie_api.check_win_rate(@user_team)) if !axie_api.check_win_rate(@user_team).nil?
     @user_team.save
-
     redirect_to "/users/#{@user.id}"
   end
 
