@@ -29,7 +29,8 @@
                   <div class="">
                     <div class="d-flex form-input h-100">
                       <%= f.input :scholar_name, label: false, input_html: { class: "visible-input"}, placeholder: 'Scholar name' %>
-                      <%= f.input :ronin_address, label: false, input_html: { class: "visible-input"}, placeholder: 'Ronin address' %>
+                      <%= f.input :ronin_address, label: false, input_html: { class: "visible-input"}, placeholder: 'Ronin address (ronin:4cx5... )' %>
+                      <%= f.input :manager_share, :as => :integer, label: false, input_html: { class: "visible-input", min: 0, max: 100, step: 0.01 }, placeholder: 'Manager share' %>
                       <%= f.input :user_id, :as => :hidden, :input_html => { :value => @user.id } %>
                     </div>
                   </div>

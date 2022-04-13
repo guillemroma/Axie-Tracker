@@ -91,7 +91,8 @@ addresses.each do |address_name, address|
     total_slp: temp_metrics["raw_total"],
     last_claim: temp_metrics["last_claim"],
     next_claim: temp_metrics["next_claim"],
-    scholar_name: "Scholar#{rand(1..9999)}"
+    scholar_name: "Scholar#{rand(1..9999)}",
+    manager_share: 0.5
   )
 end
 
