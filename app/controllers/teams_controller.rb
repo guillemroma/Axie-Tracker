@@ -83,7 +83,7 @@ class TeamsController < ApplicationController
       scholar_name: params["team"]["scholar_name"],
       manager_share: params["team"]["manager_share"].to_f.round(2)
     )
-    
+
     #In order to do the battle show we cannot nest more than to each loops
     #because the code breaks constantly. We initially had it like this but since it was
     #extremlly unstable we switched it to this new approach:
@@ -97,7 +97,7 @@ class TeamsController < ApplicationController
     #if so, we destroy them to have a fresh start
     Battle.where(ronin_address: @address).destroy_all
     #1-Create a battle with all the information available in the first iteration
-    unless battles["battles"].nil?
+    unless battles.nil?
       battles["battles"].each do |battle|
         #battle will refer to the iteration on the battles hash, new_battle to the
         #battle instance that we will create and then save in the DB as a new record
@@ -131,7 +131,6 @@ class TeamsController < ApplicationController
         battle.save
       end
     end
-
     unless team_metrics.nil?
       DailyEarning.create(daily_slp: team_metrics["total_slp"], date: Date.today, ronin_address: @address)
       DailyLevel.create(mmr: team_metrics["mmr"], date: Date.today, ronin_address: @address)

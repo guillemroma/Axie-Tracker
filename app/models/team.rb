@@ -14,7 +14,7 @@ class Team < ApplicationRecord
   private
 
   def ronin_address_valid?
-    unless ronin_address.starts_with?("0x")
+    unless ronin_address.nil? || ronin_address.starts_with?("0x")
       errors.add(:ronin_address, "must be a valid address")
     end
   end
