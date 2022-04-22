@@ -9,7 +9,14 @@
 }
 
 .table-input {
-  width: 14.28%;
+  width: 12.5%;
+  p {
+    margin: auto;
+  }
+}
+
+.row-data {
+  height: 50px;
 }
 
 .index-row-headers {
@@ -19,7 +26,7 @@
 }
 
 .table-input-2 {
-  width: 14.28%;
+  width: 12.5%;
   border-style: solid;
   border-color: #21B6A8;
   border-top: none;
@@ -128,4 +135,8 @@
     text-decoration: none;
     color: #49423F;
   }
+}
+
+.claim-ready {
+  color: #21B6A8;
 }

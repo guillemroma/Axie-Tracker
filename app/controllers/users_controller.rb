@@ -62,16 +62,18 @@ class UsersController < ApplicationController
     @current_slp = 0
     @wins = 0
     @battles = 0
+    @manager_current_slp = 0
 
     @user.teams.each do |team|
-      @current_slp += team.current_slp if !team.current_slp.nil?
+      @current_slp += team.current_slp unless team.current_slp.nil?
+      @manager_current_slp += (team.current_slp * (team.manager_share / 100)).to_i unless team.current_slp.nil?
       @mmr << team.mmr
       Battle.where(ronin_address: team.ronin_address).each do |battle|
         battle.result == "won" ? ((@battles += 1) && (@wins += 1)) : (@battles += 1)
       end
     end
 
-    fetch_coins if !fetch_coins.nil?
+    fetch_coins unless fetch_coins.nil?
     info = Info.new
     @articles = info.present
     @article_count = 0
