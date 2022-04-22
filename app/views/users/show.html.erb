@@ -5,12 +5,16 @@
         <div class="user-stats">
           <div class="d-flex justify-content-between">
             <div class="card-summary">
-              <p class="underline number-size"><%= @user.teams.exists? ? number_with_delimiter(@current_slp, :delimiter => ',') : "- " %></p>
-              <h5>Claimable SLP's</h5>
+              <p class="underline number-size"><%= @user.teams.exists? ? number_with_delimiter(@user.teams.count, :delimiter => ',') : "- " %></p>
+              <h5># Teams</h5>
             </div>
             <div class="card-summary">
               <p class="underline number-size"><%= @user.teams.exists? ? ((((@wins.to_f / @battles.to_f) * 100).to_i) if (@battles != 0)) : "- " %>%</p>
               <h5>Win Rate</h5>
+            </div>
+            <div class="card-summary">
+              <p class="underline number-size"><%= @user.teams.exists? ? number_with_delimiter(@manager_current_slp, :delimiter => ',') : "- " %></p>
+              <h5>Manager's SLP</h5>
             </div>
             <div class="card-summary">
               <p class="underline number-size"><%= @user.teams.exists? ? number_with_delimiter(@mmr.max, :delimiter => ',') : "- " %></p>
@@ -23,7 +27,7 @@
           </div>
         </div>
         <div class="non-stuck">
-          <div class="mt-4">
+          <div class="mt-5">
             <% if (current_user.present?) && (current_user.id == params[:id].to_i) %>
                 <%= simple_form_for @team, url: "/ronin_address", :method => :post, html: { class: "d-flex justify-content-center mt-2"}, defaults: { wrapper: false }, remote: true do |f| %>
                   <div class="">
@@ -38,11 +42,14 @@
                 <% end %>
               <% end %>
           </div>
-          <div class="mt-4 table-of-contents">
+          <div class="mt-5 table-of-contents">
             <div class = "row-headers">
               <div class= "d-flex w-100">
                 <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
                   <strong>Scholar name</strong>
+                </div>
+                <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
+                  <strong>Played yesterday?</strong>
                 </div>
                 <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
                   <strong>Win rate</strong>
@@ -54,10 +61,10 @@
                   <strong>Rank</strong>
                 </div>
                 <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
-                  <strong>Claimable SLPs</strong>
+                  <strong>Claimable SLP</strong>
                 </div>
                 <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
-                  <strong>Total SLP</strong>
+                  <strong>Manager's SLP</strong>
                 </div>
                 <div class="table-input-2 d-flex align-items-center justify-content-center m-0">
                   <strong>Next claim</strong>
@@ -66,7 +73,7 @@
             </div>
             <div class="scholars-breakdown mt-3" id="results" >
               <% @user.teams.each do |team| %>
-                <%= render 'teams/list_teams', team: team %>
+                <%= render 'teams/list_teams', team: team, daily_earnings: DailyEarning.where(ronin_address: team.ronin_address) %>
               <% end %>
             </div>
           </div>

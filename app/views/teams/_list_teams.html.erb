@@ -1,9 +1,9 @@
 <div data-controller="update-users" data-update-users-target="scholar">
   <div class = "index-row">
     <div class= "d-flex">
-      <div class="table-input d-flex align-items-center justify-content-left m-1">
+      <div class="table-input d-flex align-items-center justify-content-left">
         <% if current_user == team.user %>
-          <div class="d-flex edit-address" data-action="click->update-users#updateArrowToggle">
+          <div class="d-flex edit-address ms-2" data-action="click->update-users#updateArrowToggle">
             <img src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.clipartbest.com%2Fcliparts%2Face%2FXMb%2FaceXMbaEi.png&f=1&nofb=1" alt="edit option" data-update-users-target="arrow" class="arrow-up">
           </div>
         <% end %>
@@ -13,23 +13,32 @@
           </a>
         </div>
       </div>
-      <div class="table-input d-flex align-items-center justify-content-center m-0">
+      <div class="table-input d-flex align-items-center justify-content-center m-0 row-data">
+        <%= daily_earnings.last.date != Date.yesterday - 8 ? "🔴" : "🟢" %>
+      </div>
+      <div class="table-input d-flex align-items-center justify-content-center m-0 row-data">
         <%= (team.win_rate.present? && !team.win_rate.nan?) ? "#{(team.win_rate * 100).to_i} %" : "-" %>
       </div>
-      <div class="table-input d-flex align-items-center justify-content-center m-0">
+      <div class="table-input d-flex align-items-center justify-content-center m-0 row-data">
         <%= team.mmr.present? ? number_with_delimiter(team.mmr, :delimiter => ',') : "" %>
       </div>
-      <div class="table-input d-flex align-items-center justify-content-center m-0">
+      <div class="table-input d-flex align-items-center justify-content-center m-0 row-data">
         <%= team.rank.present? ? number_with_delimiter(team.rank, :delimiter => ',') : "" %>
       </div>
-      <div class="table-input d-flex align-items-center justify-content-center m-0">
+      <div class="table-input d-flex align-items-center justify-content-center m-0 row-data">
         <%= team.current_slp.present? ? number_with_delimiter(team.current_slp, :delimiter => ',') : "" %>
       </div>
-      <div class="table-input d-flex align-items-center justify-content-center m-0">
-        <%= team.total_slp.present? ? number_with_delimiter(team.total_slp, :delimiter => ',') : "" %>
+      <div class="table-input d-flex align-items-center justify-content-center m-0 row-data">
+        <%= team.current_slp.present? && team.manager_share.present? ? number_with_delimiter((team.current_slp * (team.manager_share / 100)).to_i, :delimiter => ',') : "" %>
       </div>
-      <div class="table-input d-flex align-items-center justify-content-center m-0">
-        <%= "In " %><%= team.next_claim.present? ? ((Time.at(team.next_claim) - Time.now)/60/60/24).to_i : "" %><%= ((Time.at(team.next_claim) - Time.now)/60/60/24).to_i == 1 ? " day" : " days" %>
+      <div class="table-input d-flex align-items-center justify-content-center m-0 row-data">
+        <% if team.next_claim.present? %>
+          <% unless ((Time.at(team.next_claim) - Time.now)/60/60/24).to_i <= 0 %>
+            <p><%= "In " %><%= ((Time.at(team.next_claim) - Time.now)/60/60/24).to_i%><%= ((Time.at(team.next_claim) - Time.now)/60/60/24).to_i == 1 ? " day" : " days" %></p>
+          <% else %>
+            <strong><p class="claim-ready">Claim ready</p></strong>
+          <% end %>
+        <% end %>
       </div>
     </div>
     <% if current_user == team.user %>
