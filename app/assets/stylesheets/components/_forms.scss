@@ -19,12 +19,14 @@
 
 .form-input {
   input.visible-input-update {
-    width: 100%;
-    margin-right: 0.5%;
+    width: 85%;
     justify-content: center;
-    height: 75%;
     border-radius: 150px;
-    margin-left: 25px;
+    margin-bottom: 5px;
+    margin-left: 5%;
+  }
+  label{
+    margin-left: 11%;
   }
 }
 
