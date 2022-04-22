@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="table-input d-flex align-items-center justify-content-center m-0 row-data">
-        <%= daily_earnings.last.date != Date.yesterday - 8 ? "🔴" : "🟢" %>
+        <%= daily_earnings.last.date != Date.yesterday ? "🔴" : "🟢" %>
       </div>
       <div class="table-input d-flex align-items-center justify-content-center m-0 row-data">
         <%= (team.win_rate.present? && !team.win_rate.nan?) ? "#{(team.win_rate * 100).to_i} %" : "-" %>
@@ -42,25 +42,36 @@
       </div>
     </div>
     <% if current_user == team.user %>
-      <div class="d-flex">
-        <div class = "empty-row mt-0 mb-0 w-100 d-flex justify-content-start">
-          <%= simple_form_for team, url: "/ronin_address/#{team.id}",
-            :method => :patch,
-            html: { class: "d-flex justify-content-left mt-2 d-none", data: { update_users_target: "form", action: "submit->update-users#updateScholarName" }},
-            defaults: { wrapper: false },
-            remote: true do |f| %>
-            <div class="">
-              <div class="d-flex form-input h-100">
-                <%= f.input :scholar_name, label: false, input_html: { class: "visible-input-update"}, placeholder: 'New scholar name' %>
-                <%= f.input :ronin_address, :as => :hidden, :input_html => { :value => team.ronin_address } %>
+      <div>
+        <div class="d-flex">
+          <div class = "d-flex">
+            <%= simple_form_for team, url: "/ronin_address/#{team.id}",
+              :method => :patch,
+              html: { class: "d-flex justify-content-left mt-2 d-none", data: { update_users_target: "form", action: "submit->update-users#updateScholarName" }},
+              defaults: { wrapper: false },
+              remote: true do |f| %>
+              <div>
+                <div class="d-flex form-input h-100">
+                  <div class="form-input">
+                    <%= f.label :scholar_name, label_html: { class: "visible-label-update" } %>
+                    <%= f.input :scholar_name, label: false, input_html: { class: "visible-input-update"}%>
+                  </div>
+                  <div class="form-input ms-2">
+                    <%= f.label :manager_share, label_html: { class: "visible-label-update" } %>
+                    <%= f.input :manager_share, label: false, input_html: { class: "visible-input-update"} %>
+                  </div>
+                  <%= f.input :ronin_address, :as => :hidden, :input_html => { :value => team.ronin_address } %>
+                </div>
+              </div>
+              <div class="sf-submit" >
+                <%= f.submit "Update"%>
+              </div>
+            <% end %>
+            <div class="team-delete-button">
+              <div>
+                <%= button_to "Delete scholar", "/ronin_address/#{(team.id)}", method: :delete, class: "d-none", data: { update_users_target: "deleteButton", confirm: "You will delete #{team.scholar_name.present? ? team.scholar_name : ""}, are you sure?"} %>
               </div>
             </div>
-            <div class="submit" >
-              <%= f.submit "Update"%>
-            </div>
-          <% end %>
-          <div class="team-delete-button">
-            <%= button_to "Delete scholar", "/ronin_address/#{(team.id)}", method: :delete, class: "d-none", data: { update_users_target: "deleteButton", confirm: "You will delete #{team.scholar_name.present? ? team.scholar_name : ""}, are you sure?"} %>
           </div>
         </div>
       </div>
