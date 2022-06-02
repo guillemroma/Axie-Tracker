@@ -46,9 +46,7 @@ puts "#{User.count} users were created"
 addresses = {
   address_1: "ronin:805d40d62c9d8f5965ffa8d43cb1d03f7130dba4".gsub!("ronin:", "0x"),
   address_2: "ronin:e530affded5adb5dfdc209b7e9b9439384b95189".gsub!("ronin:", "0x"),
-  address_3: "ronin:642de1680ed811bc34b52115ceeca3a66d147fa3".gsub!("ronin:", "0x"),
-  address_4: "ronin:fee2bc9766eca6fecc90b21f9b19172ee333ed1b".gsub!("ronin:", "0x"),
-  address_5: "ronin:aa00fcfc595e8b1e3d5fdfbbdd489f63a6f227c1".gsub!("ronin:", "0x")
+  address_3: "ronin:642de1680ed811bc34b52115ceeca3a66d147fa3".gsub!("ronin:", "0x")
 }
 
 addresses.each do |address_name, address|
