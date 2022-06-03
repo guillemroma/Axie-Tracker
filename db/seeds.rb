@@ -42,7 +42,7 @@ end
 
 puts "#{User.count} users were created"
 
-
+#test
 addresses = {
   address_1: "ronin:805d40d62c9d8f5965ffa8d43cb1d03f7130dba4".gsub!("ronin:", "0x"),
   address_2: "ronin:e530affded5adb5dfdc209b7e9b9439384b95189".gsub!("ronin:", "0x"),
