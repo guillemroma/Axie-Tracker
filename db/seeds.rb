@@ -42,8 +42,6 @@ end
 
 puts "#{User.count} users were created"
 
-#test
-#added extra line
 
 addresses = {
   address_1: "ronin:805d40d62c9d8f5965ffa8d43cb1d03f7130dba4".gsub!("ronin:", "0x"),
