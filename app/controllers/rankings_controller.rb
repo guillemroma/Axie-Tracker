@@ -20,5 +20,6 @@ class RankingsController < ApplicationController
     @labels = ["Won", "Lost or Drawn"]
     @ranking = true
     DailyLevel.having("ronin_address = ? AND date <= ?", params[:ronin_address], Date.today - 3) ? @display_charts = true : @display_charts = false
+    #hola
   end
 end
